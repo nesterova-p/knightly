@@ -10,8 +10,6 @@ export default function Home() {
         <Navbar />
         <HeroSection />
         {/*Image and other s-f*/}
-        <h1 className={'font-bold'}>Habit Knightly website!</h1>
-
       </div>
   )
 }
