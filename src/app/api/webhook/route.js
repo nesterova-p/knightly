@@ -1,8 +1,8 @@
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 
-import User from '@/Models/UserSchema';
-import connectToDB from '@/lib/connectToDB';
+import User from '../../models/UserSchema';
+import connectToDB from '../../dataBase/connectToDB';
 
 export async function POST(req) {
     const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
