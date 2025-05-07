@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import { useGlobalContextProvider } from "../app/contextApi";
+import { useGlobalContextProvider } from "../contextApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function SingleMenuItem({ menuItemProp }) {

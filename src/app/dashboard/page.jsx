@@ -1,7 +1,7 @@
 "use client";
 
 import {SignOutButton, useUser} from "@clerk/nextjs";
-import Sidebar from "../../Sidebar/Sidebar";
+import Sidebar from "../../app/Sidebar/Sidebar";
 import {useGlobalContextProvider} from "../contextApi";
 import {useEffect, useState} from "react";
 import Areas from "../Pages/Areas/Areas";
@@ -38,7 +38,7 @@ export default function Dashboard() {
     }
 
     return(
-        <div className="flex">
+        <div className="flex bg-slate-50">
             <Sidebar />
             {selectedComponent}
         </div>

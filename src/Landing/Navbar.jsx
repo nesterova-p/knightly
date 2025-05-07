@@ -3,7 +3,7 @@
 import AppIcon from '../temp/AppIcon'
 import {useAuth} from "@clerk/nextjs";
 import Link from "next/link";
-import LogoAndName from "../Landing/LogoAndName";
+import LogoAndName from "./LogoAndName";
 
 export default function Navbar() {
     const {userId} = useAuth();

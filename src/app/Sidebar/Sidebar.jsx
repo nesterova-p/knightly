@@ -1,6 +1,6 @@
-import LogoAndName from "../Landing/LogoAndName";
-import MenuSelection from "../Sidebar/MenuSelection";
-import LogOut from "../Sidebar/LogOut";
+import LogoAndName from "../../Landing/LogoAndName";
+import MenuSelection from "./MenuSelection";
+import LogOut from "./LogOut";
 
 export default function Sidebar(){
     return (
