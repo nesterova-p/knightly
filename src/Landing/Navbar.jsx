@@ -1,8 +1,9 @@
 "use client";
 
-import AppIcon from '@/temp/AppIcon'
+import AppIcon from '../temp/AppIcon'
 import {useAuth} from "@clerk/nextjs";
 import Link from "next/link";
+import LogoAndName from "../Landing/LogoAndName";
 
 export default function Navbar() {
     const {userId} = useAuth();
@@ -10,17 +11,8 @@ export default function Navbar() {
         <header>
             <div className="p-8 px-20">
                 <div className="sm:flex sm:items-center sm:justify-between">
-                    {/* Logo + nazwa */}
-                    <div className="flex gap-2 items-center justify-center sm:justify-start">
-                        <div className="p-2 rounded-md bg-primary">
-                            <AppIcon color="#FFFFFF" height={34} width={34} />
-                        </div>
-                        <span className="text-2xl font-light">
-                            <span className="font-bold text-black">
-                                Knightly
-                            </span>
-                        </span>
-                    </div>
+                    {/* Logo + name */}
+                    <LogoAndName/>
 
                     {/* Buttons */}
 

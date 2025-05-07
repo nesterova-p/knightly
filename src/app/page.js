@@ -1,7 +1,5 @@
-import Image from 'next/image'
-import Navbar from '@/Landing/Navbar'
-import HeroSection from '@/Landing/HeroSection'
-// pages/_app.js
+import Navbar from '../Landing/Navbar'
+import HeroSection from '../Landing/HeroSection'
 import './globals.css'
 
 export default function Home() {
