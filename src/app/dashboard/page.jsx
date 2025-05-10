@@ -7,6 +7,9 @@ import {useEffect, useState} from "react";
 import Areas from "../Pages/Areas/Areas";
 import Statistics from "../Pages/Statistics/Statistics";
 import AllHabits from "../Pages/AllHabits/AllHabits";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 
 export default function Dashboard() {
     const {menuItemsObject} = useGlobalContextProvider();
@@ -39,8 +42,10 @@ export default function Dashboard() {
 
     return(
         <div className="flex bg-slate-50">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
             <Sidebar />
             {selectedComponent}
+            </LocalizationProvider>
         </div>
 
     )
