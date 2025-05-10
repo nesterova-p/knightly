@@ -15,6 +15,10 @@ const GlobalContext = createContext({
     darkModeObject:{
         isDarkMode: false,
         setDarkMode : () => {},
+    },
+    habitWindowObject:{
+        openHabitWindow: false,
+        setOpenHabitWindow: () => {},
     }
 })
 
@@ -28,13 +32,15 @@ export const GlobalContextProvider = ({ children }) => {
     {/* add rewards*/}
 
     const [openSideBar, setOpenSideBar] = useState(false);
-    const [ isDarkMode, setDarkMode ] = useState(false);
+    const [isDarkMode, setDarkMode] = useState(false);
+    const [openHabitWindow, setOpenHabitWindow] = useState(false); // Fixed naming here
 
     return (
         <GlobalContext.Provider value={{
             menuItemsObject: { menuItems, setMenuItems },
             openSideBarObject: { openSideBar, setOpenSideBar },
             darkModeObject: { isDarkMode, setDarkMode },
+            habitWindowObject: { openHabitWindow, setOpenHabitWindow }, // Fixed naming here
         }}>
             {children}
         </GlobalContext.Provider>
