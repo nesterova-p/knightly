@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import React, { memo, useRef, useState, useEffect, useCallback } from "react";
 import { useGlobalContextProvider } from "../../../contextApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faClose, faIcons, faQuestion} from "@fortawesome/free-solid-svg-icons";
+import {faClose, faIcons, faQuestion, faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import IconWindow from "../../AllHabits/Components/IconWindow/IconWindow";
 
 const HeaderMemo = memo(Header);
@@ -113,6 +113,7 @@ export default function HabitWindow() {
                         onFrequencyChange={updateWeeklyFrequency}
                         initialFrequency={habitItem.frequency[0].number}
                     />
+                    <Reminder />
                     <SaveButton habit={habitItem} />
                 </div>
             </div>
@@ -188,6 +189,51 @@ function InputNameAndIconButton({ onUpdateHabitName, habitName, selectedIcon, se
                     />
                 </button>
             </div>
+        </div>
+    );
+}
+
+function Reminder() {
+    const [isOn, setIsOn] = useState(false);
+
+    function updateToggle() {
+        setIsOn(!isOn);
+    }
+
+    return (
+        <div className="flex flex-col gap-2 mb-6">
+            <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 mb-2">Daily Notification</span>
+                <ToggleSwitch isOn={isOn} updateToggle={updateToggle} />
+            </div>
+
+            {isOn && (
+                <div className="flex justify-between p-4 m-2 mt-4 rounded-md bg-gray-50">
+                    <span>Select Time</span>
+                    <div className="flex gap-2 items-center justify-center cursor-pointer select-none">
+                        <span>08:00 AM</span>
+                        <FontAwesomeIcon height={12} width={12} icon={faChevronDown} />
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function ToggleSwitch({ isOn, updateToggle }) {
+    return (
+        <div
+            className={`${
+                isOn ? "bg-primary" : "bg-slate-400"
+            } w-16 h-[30px] relative rounded-lg flex`}
+        >
+            <div onClick={updateToggle} className="w-1/2 h-full"></div>
+            <div onClick={updateToggle} className="w-1/2 h-full"></div>
+            <div
+                className={`bg-white h-6 w-6 rounded-full ${
+                    isOn ? "right" : "left"
+                }-[3px] top-[3px] absolute`}
+            ></div>
         </div>
     );
 }
