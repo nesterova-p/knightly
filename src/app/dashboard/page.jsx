@@ -1,6 +1,5 @@
 "use client";
 
-import {SignOutButton, useUser} from "@clerk/nextjs";
 import Sidebar from "../../app/Sidebar/Sidebar";
 import {useGlobalContextProvider} from "../contextApi";
 import {useEffect, useState} from "react";
@@ -25,7 +24,6 @@ export default function Dashboard() {
         })
     }, [menuItems]);
 
-    // which component to render
     switch (selectedMenu && selectedMenu.name) {
         case "All Habits":
             selectedComponent = <AllHabits />;
@@ -43,10 +41,20 @@ export default function Dashboard() {
     return(
         <div className="flex bg-slate-50">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <Sidebar />
-            {selectedComponent}
+                <Sidebar />
+                {selectedComponent}
+                <SoftLayer/>
             </LocalizationProvider>
         </div>
 
+    )
+}
+
+function SoftLayer(){
+    const {openSideBarObject} = useGlobalContextProvider();
+    const {openSideBar} = openSideBarObject;
+    return (
+        <div className={`w-full h-full bg-black fixed top-0 left-0 opacity-25 z-40 ${openSideBar ? "fixed" : "hidden"} `}>
+        </div>
     )
 }
