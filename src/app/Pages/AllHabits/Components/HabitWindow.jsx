@@ -15,7 +15,8 @@ export default function HabitWindow() {
     const [habitItem, setHabitItem] = useState({
         _id: "",
         name: "",
-        icon: faQuestion,
+        icon: faIcons,
+        frequency: [{type: "Daily"}],
     });
     const [openIconWindow, setOpenIconWindow] = useState(false);
 
@@ -32,6 +33,14 @@ export default function HabitWindow() {
         }));
     };
 
+    function changeRepeatOption(repeatOption) {
+        const filterIsSelected = repeatOption.filter((singleOption) => singleOption.isSelected);
+        const nameOfSelectedOption = filterIsSelected[0].name;
+        const copyHabitItem = { ...habitItem };
+        copyHabitItem.frequency[0].type = nameOfSelectedOption;
+        setHabitItem(copyHabitItem);
+    }
+
     return (
         <>
             {/* Soft Layer */}
@@ -42,7 +51,7 @@ export default function HabitWindow() {
 
             {/* Modal */}
             <div
-                className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-50 bg-white rounded-md shadow-lg ${openHabitWindow ? "block" : "hidden"}`}
+                className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-50 bg-white rounded-lg shadow-lg ${openHabitWindow ? "block" : "hidden"}`}
             >
                 <div className="p-6">
                     <HeaderMemo />
@@ -52,6 +61,7 @@ export default function HabitWindow() {
                         selectedIcon={habitItem.icon}
                         setOpenIconWindow={setOpenIconWindow}
                     />
+                    <Repeat onChangeOption={changeRepeatOption}/>
                     <SaveButton habit={habitItem} />
                 </div>
             </div>
@@ -126,6 +136,48 @@ function InputNameAndIconButton({ onUpdateHabitName, habitName, selectedIcon, se
                         height={16}
                     />
                 </button>
+            </div>
+        </div>
+    );
+}
+
+function Repeat({onChangeOption}){
+    const [repeatOption, setRepeatOption] = useState([
+        {name: "Daily", isSelected: true},
+        {name: "Weekly", isSelected: false},
+        {name: "Monthly", isSelected: false},
+    ]);
+
+    function changeRepeatOption(indexClicked) {
+        // This function had a syntax error - missing brackets and return statements
+        const updatedRepeatOption = repeatOption.map((singleOption, index) => {
+            if(index === indexClicked) {
+                return { ...singleOption, isSelected: true };
+            } else {
+                return { ...singleOption, isSelected: false };
+            }
+        });
+        setRepeatOption(updatedRepeatOption);
+        onChangeOption(updatedRepeatOption);
+    }
+
+    return (
+        <div className="flex flex-col gap-2 mb-6">
+            <span className="text-sm text-gray-600 mb-2">Repeat</span>
+            <div className="flex gap-2 items-center">
+                {repeatOption.map((singleOption, index) => (
+                    <button
+                        className={`py-2 px-4 rounded-md text-sm ${
+                            singleOption.isSelected
+                                ? "bg-primary text-white"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        }`}
+                        key={index}
+                        onClick={() => changeRepeatOption(index)}
+                    >
+                        {singleOption.name}
+                    </button>
+                ))}
             </div>
         </div>
     );
