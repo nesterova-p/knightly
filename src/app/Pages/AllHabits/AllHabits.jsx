@@ -5,8 +5,8 @@ import HabitsCompleted from "../../Pages/AllHabits/Components/HabitsCompleted";
 
 export default function AllHabits() {
     return (
-        <div className = 'w-full flex'>
-            <div className={"w-[70%] m-5"}>
+        <div className = 'max-lg:flex-col w-full flex flex-row gap-0'>
+            <div className={"flex-col flex-grow m-4"}>
                 <AllHabitsTop/>
                 <HabitsContainer/>
                 <HabitsCompleted/>

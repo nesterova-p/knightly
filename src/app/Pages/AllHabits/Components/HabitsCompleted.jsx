@@ -9,7 +9,7 @@ export default function HabitsCompleted(){
     return (
         <div className="bg-white mt-7 p-8 rounded-b-md">
             <span className={"font-bold text-lg mb-2"}>
-                Habits Completed
+                Habits and Tasks completed
             </span>
             <div className={"mt-4 opacity-50"}>
                 <HabitCard/>

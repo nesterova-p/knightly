@@ -4,7 +4,7 @@ import UserProfile from "../Pages/AllHabits/Components/SecondSideBar/UserProfile
 
 export default function Sidebar(){
     return (
-        <div className="flex-grow p-10 flex flex-col border bg-white min-h-screen">
+        <div className="max-xl:hidden flex-grow p-10 flex flex-col  bg-white min-h-screen">
             <UserProfile/>
             <MenuSelection />
             <LogOut/>
