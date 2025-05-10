@@ -7,7 +7,7 @@ export default function MainStats() {
     ]
 
     return(
-        <div className="flex mx-4 flex-col gap-6 justify-center items-center mt-14 rounded-xl p-5 pt-7 bg-slate-50 ">
+        <div className="flex mx-4 flex-col gap-6 justify-center items-center mt-5 rounded-xl p-5 pt-7 bg-slate-50 ">
             <span className="font-bold text-xl cursor-pointer hover:text-primary ">
                 Statistics
             </span>

@@ -11,7 +11,7 @@ export default function UserProfile() {
     const { user } = useUser();
 
     return (
-        <div className="flex flex-col items-center justify-center mt-8 gap-3">
+        <div className="flex flex-col items-center justify-center mt-5 gap-3">
             <UserButton appearance={userButtonAppearance} />
             {user && (
                 <div>
