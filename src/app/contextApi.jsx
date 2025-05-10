@@ -11,6 +11,10 @@ const GlobalContext = createContext({
     openSideBarObject: {
         openSideBar: false,
         setOpenSideBar: () => {},
+    },
+    darkModeObject:{
+        isDarkMode: false,
+        setDarkMode : () => {},
     }
 })
 
@@ -24,11 +28,13 @@ export const GlobalContextProvider = ({ children }) => {
     {/* add rewards*/}
 
     const [openSideBar, setOpenSideBar] = useState(false);
+    const [ isDarkMode, setDarkMode ] = useState(false);
 
     return (
         <GlobalContext.Provider value={{
             menuItemsObject: { menuItems, setMenuItems },
-            openSideBarObject: { openSideBar, setOpenSideBar }
+            openSideBarObject: { openSideBar, setOpenSideBar },
+            darkModeObject: { isDarkMode, setDarkMode },
         }}>
             {children}
         </GlobalContext.Provider>
