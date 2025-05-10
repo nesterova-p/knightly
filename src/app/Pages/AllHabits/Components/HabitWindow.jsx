@@ -1,6 +1,6 @@
 "use client";
 import { v4 as uuidv4 } from "uuid";
-import React, { memo, useRef, useState, useEffect } from "react";
+import React, { memo, useRef, useState, useEffect, useCallback } from "react";
 import { useGlobalContextProvider } from "../../../contextApi";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {faClose, faIcons, faQuestion} from "@fortawesome/free-solid-svg-icons";
@@ -12,12 +12,27 @@ const InputNameAndIconButtonMemo = memo(InputNameAndIconButton);
 export default function HabitWindow() {
     const { habitWindowObject } = useGlobalContextProvider();
     const { openHabitWindow, setOpenHabitWindow } = habitWindowObject;
-    const [habitItem, setHabitItem] = useState({
+
+    const defaultHabitState = {
         _id: "",
         name: "",
         icon: faIcons,
-        frequency: [{type: "Daily"}],
-    });
+        frequency: [{
+            type: "Daily",
+            days: [
+                {id: 1, name: "M", isSelected: true},
+                {id: 2, name: "T", isSelected: false},
+                {id: 3, name: "W", isSelected: false},
+                {id: 4, name: "T", isSelected: false},
+                {id: 5, name: "F", isSelected: false},
+                {id: 6, name: "S", isSelected: false},
+                {id: 7, name: "S", isSelected: false},
+            ],
+            number: 1
+        }],
+    };
+
+    const [habitItem, setHabitItem] = useState(defaultHabitState);
     const [openIconWindow, setOpenIconWindow] = useState(false);
 
     const onUpdateHabitName = (inputText) => {
@@ -41,6 +56,36 @@ export default function HabitWindow() {
         setHabitItem(copyHabitItem);
     }
 
+    const updateSelectedDays = useCallback((updatedDays) => {
+        setHabitItem(prev => ({
+            ...prev,
+            frequency: [
+                {
+                    ...prev.frequency[0],
+                    days: updatedDays
+                }
+            ]
+        }));
+    }, []);
+
+    const updateWeeklyFrequency = useCallback((weekCount) => {
+        setHabitItem(prev => ({
+            ...prev,
+            frequency: [
+                {
+                    ...prev.frequency[0],
+                    number: weekCount
+                }
+            ]
+        }));
+    }, []);
+
+    useEffect(() => {
+        if (!openHabitWindow) {
+            setHabitItem(defaultHabitState);
+        }
+    }, [openHabitWindow]);
+
     return (
         <>
             {/* Soft Layer */}
@@ -61,7 +106,13 @@ export default function HabitWindow() {
                         selectedIcon={habitItem.icon}
                         setOpenIconWindow={setOpenIconWindow}
                     />
-                    <Repeat onChangeOption={changeRepeatOption}/>
+                    <Repeat
+                        onChangeOption={changeRepeatOption}
+                        initialDays={habitItem.frequency[0].days}
+                        onDaysChange={updateSelectedDays}
+                        onFrequencyChange={updateWeeklyFrequency}
+                        initialFrequency={habitItem.frequency[0].number}
+                    />
                     <SaveButton habit={habitItem} />
                 </div>
             </div>
@@ -106,11 +157,11 @@ function InputNameAndIconButton({ onUpdateHabitName, habitName, selectedIcon, se
     }
 
     useEffect(() => {
-        setTimeout(() => {
-            inputRef.current?.focus();
-        }, 500);
-
-        if (!openHabitWindow) {
+        if (openHabitWindow) {
+            setTimeout(() => {
+                inputRef.current?.focus();
+            }, 500);
+        } else {
             onUpdateHabitName("");
         }
     }, [openHabitWindow]);
@@ -141,15 +192,57 @@ function InputNameAndIconButton({ onUpdateHabitName, habitName, selectedIcon, se
     );
 }
 
-function Repeat({onChangeOption}){
+function Repeat({ onChangeOption, initialDays, onDaysChange, onFrequencyChange, initialFrequency }){
+    const { habitWindowObject } = useGlobalContextProvider();
+    const { openHabitWindow } = habitWindowObject;
+
     const [repeatOption, setRepeatOption] = useState([
         {name: "Daily", isSelected: true},
         {name: "Weekly", isSelected: false},
-        {name: "Monthly", isSelected: false},
     ]);
 
+    const defaultDays = [
+        {id: 1, name: "M", isSelected: true},
+        {id: 2, name: "T", isSelected: false},
+        {id: 3, name: "W", isSelected: false},
+        {id: 4, name: "T", isSelected: false},
+        {id: 5, name: "F", isSelected: false},
+        {id: 6, name: "S", isSelected: false},
+        {id: 7, name: "S", isSelected: false},
+    ];
+
+    const [allDays, setAllDays] = useState(initialDays || defaultDays);
+
+    const [weeks, setWeeks] = useState(initialFrequency || 1);
+
+    const handleDaysChange = useCallback((days) => {
+        onDaysChange(days);
+    }, [onDaysChange]);
+
+    const handleWeeksChange = useCallback((weekCount) => {
+        onFrequencyChange(weekCount);
+    }, [onFrequencyChange]);
+
+    useEffect(() => {
+        handleDaysChange(allDays);
+    }, [allDays, handleDaysChange]);
+
+    useEffect(() => {
+        handleWeeksChange(weeks);
+    }, [weeks, handleWeeksChange]);
+
+    useEffect(() => {
+        if (openHabitWindow) {
+            setAllDays(defaultDays);
+            setWeeks(1);
+            setRepeatOption([
+                {name: "Daily", isSelected: true},
+                {name: "Weekly", isSelected: false},
+            ]);
+        }
+    }, [openHabitWindow]);
+
     function changeRepeatOption(indexClicked) {
-        // This function had a syntax error - missing brackets and return statements
         const updatedRepeatOption = repeatOption.map((singleOption, index) => {
             if(index === indexClicked) {
                 return { ...singleOption, isSelected: true };
@@ -160,6 +253,8 @@ function Repeat({onChangeOption}){
         setRepeatOption(updatedRepeatOption);
         onChangeOption(updatedRepeatOption);
     }
+
+    const selectedOption = repeatOption.find(option => option.isSelected)?.name || "Daily";
 
     return (
         <div className="flex flex-col gap-2 mb-6">
@@ -178,6 +273,90 @@ function Repeat({onChangeOption}){
                         {singleOption.name}
                     </button>
                 ))}
+            </div>
+            {selectedOption === "Daily" ? (
+                <DailyOptions allDays={allDays} setAllDays={setAllDays} />
+            ) : (
+                <WeeklyOption weeks={weeks} setWeeks={setWeeks} />
+            )}
+        </div>
+    );
+}
+
+function DailyOptions({ allDays, setAllDays }){
+    function selectedDays(singleDayIndex){
+        const selectedCount = allDays.filter(day => day.isSelected).length;
+
+        const updatedAllDays = allDays.map((singleDay, index) => {
+            if (
+                selectedCount === 1 &&
+                singleDay.isSelected === true &&
+                index === singleDayIndex
+            ) {
+                return singleDay;
+            }
+            return index === singleDayIndex
+                ? { ...singleDay, isSelected: !singleDay.isSelected }
+                : singleDay;
+        });
+        setAllDays(updatedAllDays);
+    }
+
+    return (
+        <div className="mt-5 flex flex-col gap-4">
+            <span className="font-medium opacity-85">On These Days</span>
+            <div className="flex gap-3 w-full">
+                {allDays.map((singleDay, singleDayIndex) => (
+                    <span
+                        key={singleDay.id}
+                        onClick={() => selectedDays(singleDayIndex)}
+                        className={`flex items-center justify-center w-9 h-9 rounded-full cursor-pointer font-medium text-sm ${
+                            singleDay.isSelected
+                                ? "bg-primary text-white"
+                                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                        }`}
+                    >
+                        {singleDay.name}
+                    </span>
+                ))}
+            </div>
+        </div>
+    );
+}
+
+function WeeklyOption({ weeks, setWeeks }){
+    function updateCounter(option) {
+        if (option === "up") {
+            setWeeks(prev => (prev < 7 ? prev + 1 : 7));
+        }
+
+        if (option === "down") {
+            setWeeks(prev => (prev > 1 ? prev - 1 : 1));
+        }
+    }
+
+    return (
+        <div className="mt-7 flex gap-4 items-center">
+            <div className="flex flex-col gap-2">
+                <span className="font-medium">Frequency</span>
+                <span className="text-sm text-gray-400">
+                    {weeks} times a week
+                </span>
+            </div>
+            <div className="flex items-center justify-center ml-auto">
+                <button
+                    onClick={() => updateCounter("down")}
+                    className="p-3 w-10 bg-gray-100 rounded-md text-gray-600 hover:bg-gray-200"
+                >
+                    -
+                </button>
+                <span className="p-4 px-5 select-none">{weeks}</span>
+                <button
+                    onClick={() => updateCounter("up")}
+                    className="p-3 w-10 bg-gray-100 rounded-md text-gray-600 hover:bg-gray-200"
+                >
+                    +
+                </button>
             </div>
         </div>
     );
@@ -203,7 +382,7 @@ function SaveButton({ habit }) {
 
         // save to database
 
-        setOpenHabitWindow(false); // Changed from true to false to close the window
+        setOpenHabitWindow(false);
     };
 
     return (
