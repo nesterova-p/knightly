@@ -1,21 +1,29 @@
-import {Checkbox, IconButton} from "@mui/material";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import {Checkbox, IconButton} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCode} from "@fortawesome/free-solid-svg-icons";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-export default function HabitsContainerMain() {
+export default function HabitsCompleted(){
     return (
-        <div className="p-3">
-            <HabitCard/>
+        <div className="bg-white mt-7 p-8 rounded-b-md">
+            <span className={"font-bold text-lg mb-2"}>
+                Habits Completed
+            </span>
+            <div className={"mt-4 opacity-50"}>
+                <HabitCard/>
+                <HabitCard/>
+                <HabitCard/>
+            </div>
         </div>
     )
 }
 
-export function HabitCard() {
+
+function HabitCard(){
     return (
-        <div className="flex p-3 items-center justify-between ">
+        <div className={"flex p-3 items-center justify-between"}>
             <Checkbox
                 className="text-primary"
                 icon={<RadioButtonUncheckedIcon />}
@@ -26,6 +34,7 @@ export function HabitCard() {
                     },
                 }}
             />
+
 
             <div className="flex justify-between gap-2 w-full p-3 py-4 rounded-md bg-slate-50  ">
                 <div className="  w-full">
@@ -51,7 +60,7 @@ export function HabitCard() {
                         <div
                             className="p-1 text-white text-[12px] rounded-md px-2 bg-primary"
                         >
-                            <span className="text-primary">Area2</span>
+                            <span className="text-primary">Area1</span>
                         </div>
                     </div>
                 </div>
