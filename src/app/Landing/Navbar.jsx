@@ -1,6 +1,6 @@
 "use client";
 
-import AppIcon from '../temp/AppIcon'
+import AppIcon from '../../temp/AppIcon'
 import {useAuth} from "@clerk/nextjs";
 import Link from "next/link";
 import LogoAndName from "./LogoAndName";

@@ -1,4 +1,4 @@
-import AppIcon from "../temp/AppIcon";
+import AppIcon from "../../temp/AppIcon";
 
 export default function LogoAndName() {
     return (

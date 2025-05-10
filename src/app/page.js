@@ -1,5 +1,5 @@
-import Navbar from '../Landing/Navbar'
-import HeroSection from '../Landing/HeroSection'
+import Navbar from '@/app/Landing/Navbar'
+import HeroSection from '@/app/Landing/HeroSection'
 import './globals.css'
 
 export default function Home() {
