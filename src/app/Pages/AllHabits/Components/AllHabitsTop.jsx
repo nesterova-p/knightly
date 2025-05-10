@@ -3,6 +3,8 @@ import LogoAndName from "../../../Landing/LogoAndName";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars} from "@fortawesome/free-solid-svg-icons";
 import {UserButton} from "@clerk/nextjs";
+import {useGlobalContextProvider} from "../../../contextApi";
+import {useEffect} from "react";
 
 export function AllHabitsTop() {
     const userButtonAppearance = {
@@ -11,6 +13,25 @@ export function AllHabitsTop() {
             userButtonPopover: 'text-primary',
         }
     }
+
+    const {openSideBarObject} = useGlobalContextProvider();
+    const {openSideBar, setOpenSideBar} = openSideBarObject || {};
+
+    function openSideBarFunction() {
+        setOpenSideBar(!openSideBar);
+    }
+
+    useEffect(() => {
+        function handleSizeChange(){
+            setOpenSideBar(false);
+        }
+
+        window.addEventListener("resize", handleSizeChange)
+
+        return () => {
+            window.removeEventListener("resize", handleSizeChange)
+        }
+    }, [setOpenSideBar]);
 
     return (
         <div className={"bg-white p-5 rounded-md flex justify-between items-center"}>
@@ -25,6 +46,7 @@ export function AllHabitsTop() {
                 <AllHabitsSearch/>
                 <FontAwesomeIcon
                     icon={faBars}
+                    onClick={openSideBarFunction}
                     className={"max-xl:flex hidden cursor-pointer"}
                 />
             </div>

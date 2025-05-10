@@ -1,4 +1,3 @@
-// src/Sidebar/MenuSelection.jsx
 "use client";
 
 import React from "react";

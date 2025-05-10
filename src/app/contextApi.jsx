@@ -7,6 +7,10 @@ const GlobalContext = createContext({
     menuItemsObject: {
         menuItems: [],
         setMenuItems: () => {}
+    },
+    openSideBarObject: {
+        openSideBar: false,
+        setOpenSideBar: () => {},
     }
 })
 
@@ -17,9 +21,15 @@ export const GlobalContextProvider = ({ children }) => {
         { name: "Statistics", isSelected: false, icon: faChartSimple },
         { name: "Areas", isSelected: false, icon: faLayerGroup },
     ])
+    {/* add rewards*/}
+
+    const [openSideBar, setOpenSideBar] = useState(false);
 
     return (
-        <GlobalContext.Provider value={{ menuItemsObject: { menuItems, setMenuItems } }}>
+        <GlobalContext.Provider value={{
+            menuItemsObject: { menuItems, setMenuItems },
+            openSideBarObject: { openSideBar, setOpenSideBar }
+        }}>
             {children}
         </GlobalContext.Provider>
     )
