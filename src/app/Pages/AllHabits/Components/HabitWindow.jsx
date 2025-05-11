@@ -9,34 +9,37 @@ import InputNameAndIconButton from "./NewHabitWindow/InputNameAndIconButton";
 import Reminder from "./NewHabitWindow/Reminder";
 import Repeat from "./NewHabitWindow/Repeat";
 import SaveButton from "./NewHabitWindow/SaveButton";
+import TimePicker from "./NewHabitWindow/TimePicker";
+
+const defaultHabitState = {
+    _id: "",
+    name: "",
+    icon: faIcons,
+    hasReminder: false,
+    reminderTime: "08:00 AM",
+    frequency: [{
+        type: "Daily",
+        days: [
+            {id: 1, name: "M", isSelected: true},
+            {id: 2, name: "T", isSelected: false},
+            {id: 3, name: "W", isSelected: false},
+            {id: 4, name: "T", isSelected: false},
+            {id: 5, name: "F", isSelected: false},
+            {id: 6, name: "S", isSelected: false},
+            {id: 7, name: "S", isSelected: false},
+        ],
+        number: 1
+    }],
+};
 
 const HeaderMemo = memo(Header);
 const InputNameAndIconButtonMemo = memo(InputNameAndIconButton);
 
 export default function HabitWindow() {
-    const { habitWindowObject } = useGlobalContextProvider();
-    const { openHabitWindow, setOpenHabitWindow } = habitWindowObject;
+    const { habitWindowObject, openTimePickerObject } = useGlobalContextProvider();
+    const { openHabitWindow, setOpenHabitWindow, habitItem, setHabitItem } = habitWindowObject;
+    const { setOpenTimePickerWindow } = openTimePickerObject;
 
-    const defaultHabitState = {
-        _id: "",
-        name: "",
-        icon: faIcons,
-        frequency: [{
-            type: "Daily",
-            days: [
-                {id: 1, name: "M", isSelected: true},
-                {id: 2, name: "T", isSelected: false},
-                {id: 3, name: "W", isSelected: false},
-                {id: 4, name: "T", isSelected: false},
-                {id: 5, name: "F", isSelected: false},
-                {id: 6, name: "S", isSelected: false},
-                {id: 7, name: "S", isSelected: false},
-            ],
-            number: 1
-        }],
-    };
-
-    const [habitItem, setHabitItem] = useState(defaultHabitState);
     const [openIconWindow, setOpenIconWindow] = useState(false);
 
     const onUpdateHabitName = (inputText) => {
@@ -70,7 +73,7 @@ export default function HabitWindow() {
                 }
             ]
         }));
-    }, []);
+    }, [setHabitItem]);
 
     const updateWeeklyFrequency = useCallback((weekCount) => {
         setHabitItem(prev => ({
@@ -82,13 +85,14 @@ export default function HabitWindow() {
                 }
             ]
         }));
-    }, []);
+    }, [setHabitItem]);
 
     useEffect(() => {
         if (!openHabitWindow) {
             setHabitItem(defaultHabitState);
+            setOpenTimePickerWindow(false);
         }
-    }, [openHabitWindow]);
+    }, [openHabitWindow, setOpenTimePickerWindow, setHabitItem]);
 
     return (
         <>
@@ -122,7 +126,7 @@ export default function HabitWindow() {
                 </div>
             </div>
 
-            {/* Icon Window */}
+            <TimePicker />
             <IconWindow
                 openIconWindow={openIconWindow}
                 setOpenIconWindow={setOpenIconWindow}
@@ -131,11 +135,3 @@ export default function HabitWindow() {
         </>
     );
 }
-
-
-
-
-
-
-
-

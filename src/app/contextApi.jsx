@@ -2,6 +2,28 @@
 
 import React, { createContext, useContext, useState } from 'react'
 import {faChartSimple, faLayerGroup, faRectangleList} from "@fortawesome/free-solid-svg-icons";
+import {faIcons} from "@fortawesome/free-solid-svg-icons";
+
+const defaultHabitState = {
+    _id: "",
+    name: "",
+    icon: faIcons,
+    hasReminder: false,
+    reminderTime: "08:00 AM",
+    frequency: [{
+        type: "Daily",
+        days: [
+            {id: 1, name: "M", isSelected: true},
+            {id: 2, name: "T", isSelected: false},
+            {id: 3, name: "W", isSelected: false},
+            {id: 4, name: "T", isSelected: false},
+            {id: 5, name: "F", isSelected: false},
+            {id: 6, name: "S", isSelected: false},
+            {id: 7, name: "S", isSelected: false},
+        ],
+        number: 1
+    }],
+};
 
 const GlobalContext = createContext({
     menuItemsObject: {
@@ -19,6 +41,12 @@ const GlobalContext = createContext({
     habitWindowObject:{
         openHabitWindow: false,
         setOpenHabitWindow: () => {},
+        habitItem: defaultHabitState,
+        setHabitItem: () => {},
+    },
+    openTimePickerObject:{
+        openTimePickerWindow: false,
+        setOpenTimePickerWindow: () => {},
     }
 })
 
@@ -33,14 +61,22 @@ export const GlobalContextProvider = ({ children }) => {
 
     const [openSideBar, setOpenSideBar] = useState(false);
     const [isDarkMode, setDarkMode] = useState(false);
-    const [openHabitWindow, setOpenHabitWindow] = useState(false); // Fixed naming here
+    const [openHabitWindow, setOpenHabitWindow] = useState(false);
+    const [openTimePickerWindow, setOpenTimePickerWindow] = useState(false);
+    const [habitItem, setHabitItem] = useState(defaultHabitState);
 
     return (
         <GlobalContext.Provider value={{
             menuItemsObject: { menuItems, setMenuItems },
             openSideBarObject: { openSideBar, setOpenSideBar },
             darkModeObject: { isDarkMode, setDarkMode },
-            habitWindowObject: { openHabitWindow, setOpenHabitWindow }, // Fixed naming here
+            habitWindowObject: {
+                openHabitWindow,
+                setOpenHabitWindow,
+                habitItem,
+                setHabitItem
+            },
+            openTimePickerObject: { openTimePickerWindow, setOpenTimePickerWindow },
         }}>
             {children}
         </GlobalContext.Provider>
