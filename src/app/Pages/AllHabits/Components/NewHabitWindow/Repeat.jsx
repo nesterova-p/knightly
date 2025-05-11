@@ -2,12 +2,14 @@ import {useGlobalContextProvider} from "../../../../contextApi";
 import React, {useCallback, useEffect, useState} from "react";
 import DailyOptions from "./DailyOptions";
 import WeeklyOption from "./WeeklyOption";
+import DateOption from "./DateOption"; // New component we'll create
 
-export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFrequencyChange, initialFrequency }){
+export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFrequencyChange, initialFrequency, onDateChange }){
     const { habitWindowObject } = useGlobalContextProvider();
-    const { openHabitWindow } = habitWindowObject;
+    const { openHabitWindow, habitItem } = habitWindowObject;
 
     const [repeatOption, setRepeatOption] = useState([
+        {name: "None", isSelected: false},   // Added None option
         {name: "Daily", isSelected: true},
         {name: "Weekly", isSelected: false},
     ]);
@@ -23,8 +25,8 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     ];
 
     const [allDays, setAllDays] = useState(initialDays || defaultDays);
-
     const [weeks, setWeeks] = useState(initialFrequency || 1);
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     const handleDaysChange = useCallback((days) => {
         onDaysChange(days);
@@ -33,6 +35,12 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     const handleWeeksChange = useCallback((weekCount) => {
         onFrequencyChange(weekCount);
     }, [onFrequencyChange]);
+
+    const handleDateChange = useCallback((date) => {
+        if(onDateChange) {
+            onDateChange(date);
+        }
+    }, [onDateChange]);
 
     useEffect(() => {
         handleDaysChange(allDays);
@@ -43,10 +51,16 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     }, [weeks, handleWeeksChange]);
 
     useEffect(() => {
+        handleDateChange(selectedDate);
+    }, [selectedDate, handleDateChange]);
+
+    useEffect(() => {
         if (openHabitWindow) {
             setAllDays(defaultDays);
             setWeeks(1);
+            setSelectedDate(new Date());
             setRepeatOption([
+                {name: "None", isSelected: false},
                 {name: "Daily", isSelected: true},
                 {name: "Weekly", isSelected: false},
             ]);
@@ -85,7 +99,10 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
                     </button>
                 ))}
             </div>
-            {selectedOption === "Daily" ? (
+
+            {selectedOption === "None" ? (
+                <DateOption selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+            ) : selectedOption === "Daily" ? (
                 <DailyOptions allDays={allDays} setAllDays={setAllDays} />
             ) : (
                 <WeeklyOption weeks={weeks} setWeeks={setWeeks} />

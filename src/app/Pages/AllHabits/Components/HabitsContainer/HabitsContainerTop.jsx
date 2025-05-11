@@ -36,7 +36,7 @@ export default function HabitsContainerTop() {
                 className="flex gap-2 items-center bg-primary p-3 text-white rounded-md text-sm hover:bg-primary/90 transition-colors"
             >
                 <FontAwesomeIcon icon={faPlus} />
-                <span>New Habit</span>
+                <span>New Adventure</span>
             </button>
         </div>
     )

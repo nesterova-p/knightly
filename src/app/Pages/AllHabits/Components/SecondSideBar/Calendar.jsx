@@ -25,8 +25,8 @@ export default function Calendar() {
                         padding: { xs: '0.5rem', sm: '0.75rem' },
                         "&.Mui-selected": {
                             border: "none",
-                            backgroundColor: "rgba(0, 0, 0, 0.04)",
-                            fontWeight: 'bold',
+                            backgroundColor: "#9EC77D",
+                            color: "white",
                             "&:focus, &:hover": {
                                 backgroundColor: "#9EC77D",
                             }
@@ -34,13 +34,17 @@ export default function Calendar() {
                         "&:hover": {
                             backgroundColor: "rgba(0, 0, 0, 0.04)",
                         },
+
                     },
                     "& .MuiPickersDay-today": {
-                        border: "1px solid #cfcfcf",
-                        backgroundColor: "#9EC77D",
+                        border: "none",
+                        backgroundColor: "#4B5563",
                         color: "white",
+                        "&.Mui-selected": {
+                            backgroundColor: "#9EC77D",
+                        }
                     }
-                }}
+                    }}
             />
         </div>
     )

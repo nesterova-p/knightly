@@ -8,8 +8,10 @@ const defaultHabitState = {
     _id: "",
     name: "",
     icon: faIcons,
+    isTask: false,
     hasReminder: false,
     reminderTime: "08:00 AM",
+    dueDate: new Date(),
     frequency: [{
         type: "Daily",
         days: [
@@ -47,6 +49,10 @@ const GlobalContext = createContext({
     openTimePickerObject:{
         openTimePickerWindow: false,
         setOpenTimePickerWindow: () => {},
+    },
+    tasksObject: {
+        tasks: [],
+        setTasks: () => {},
     }
 })
 
@@ -64,6 +70,7 @@ export const GlobalContextProvider = ({ children }) => {
     const [openHabitWindow, setOpenHabitWindow] = useState(false);
     const [openTimePickerWindow, setOpenTimePickerWindow] = useState(false);
     const [habitItem, setHabitItem] = useState(defaultHabitState);
+    const [tasks, setTasks] = useState([]);
 
     return (
         <GlobalContext.Provider value={{
@@ -77,6 +84,7 @@ export const GlobalContextProvider = ({ children }) => {
                 setHabitItem
             },
             openTimePickerObject: { openTimePickerWindow, setOpenTimePickerWindow },
+            tasksObject: { tasks, setTasks },
         }}>
             {children}
         </GlobalContext.Provider>

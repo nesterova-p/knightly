@@ -1,15 +1,17 @@
-import {useGlobalContextProvider} from "../../../../contextApi";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClose} from "@fortawesome/free-solid-svg-icons";
+import { useGlobalContextProvider } from "../../../../contextApi";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 
 export default function Header() {
     const { habitWindowObject } = useGlobalContextProvider();
-    const { setOpenHabitWindow } = habitWindowObject;
+    const { setOpenHabitWindow, habitItem } = habitWindowObject;
 
     return (
         <div className="flex justify-between items-center mb-6">
-            <span className="font-bold text-xl">Add New Habit</span>
+            <span className="font-bold text-xl">
+                {habitItem?.isTask ? "Add New Task" : "Add New Habit"}
+            </span>
             <FontAwesomeIcon
                 onClick={() => {
                     setOpenHabitWindow(false)

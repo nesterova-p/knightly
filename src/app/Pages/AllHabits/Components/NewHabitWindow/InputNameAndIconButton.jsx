@@ -24,14 +24,14 @@ export default function InputNameAndIconButton({ onUpdateHabitName, habitName, s
 
     return (
         <div className="mb-6">
-            <div className="text-sm text-gray-600 mb-2">Habit Name</div>
+            <div className="text-sm text-gray-600 mb-2">Adventure Name</div>
             <div className="flex items-center">
                 <input
                     ref={inputRef}
                     value={habitName}
                     onChange={(event) => updateInputHabit(event)}
                     className="flex-grow py-3 px-4 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                    placeholder="Type a name for the habit..."
+                    placeholder="Type a name for an adventure..."
                 />
                 <button
                     className="ml-2 p-3 bg-primary text-white rounded-md hover:bg-primary transition-colors"

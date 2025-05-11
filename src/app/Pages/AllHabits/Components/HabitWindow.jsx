@@ -2,7 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useGlobalContextProvider } from "../../../contextApi";
-import {faIcons} from "@fortawesome/free-solid-svg-icons";
+import { faIcons } from "@fortawesome/free-solid-svg-icons";
 import IconWindow from "../../AllHabits/Components/IconWindow/IconWindow";
 import Header from "./NewHabitWindow/Header";
 import InputNameAndIconButton from "./NewHabitWindow/InputNameAndIconButton";
@@ -15,8 +15,10 @@ const defaultHabitState = {
     _id: "",
     name: "",
     icon: faIcons,
+    isTask: false,
     hasReminder: false,
     reminderTime: "08:00 AM",
+    dueDate: new Date(),
     frequency: [{
         type: "Daily",
         days: [
@@ -60,6 +62,7 @@ export default function HabitWindow() {
         const nameOfSelectedOption = filterIsSelected[0].name;
         const copyHabitItem = { ...habitItem };
         copyHabitItem.frequency[0].type = nameOfSelectedOption;
+        copyHabitItem.isTask = nameOfSelectedOption === "None";
         setHabitItem(copyHabitItem);
     }
 
@@ -84,6 +87,13 @@ export default function HabitWindow() {
                     number: weekCount
                 }
             ]
+        }));
+    }, [setHabitItem]);
+
+    const updateDueDate = useCallback((date) => {
+        setHabitItem(prev => ({
+            ...prev,
+            dueDate: date
         }));
     }, [setHabitItem]);
 
@@ -120,6 +130,7 @@ export default function HabitWindow() {
                         onDaysChange={updateSelectedDays}
                         onFrequencyChange={updateWeeklyFrequency}
                         initialFrequency={habitItem.frequency[0].number}
+                        onDateChange={updateDueDate}
                     />
                     <Reminder />
                     <SaveButton habit={habitItem} />
