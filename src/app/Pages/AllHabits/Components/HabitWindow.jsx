@@ -10,6 +10,7 @@ import Reminder from "./NewHabitWindow/Reminder";
 import Repeat from "./NewHabitWindow/Repeat";
 import SaveButton from "./NewHabitWindow/SaveButton";
 import TimePicker from "./NewHabitWindow/TimePicker";
+import AreasNewHabit from "./NewHabitWindow/AreasNewHabit";
 
 const defaultHabitState = {
     _id: "",
@@ -32,6 +33,7 @@ const defaultHabitState = {
         ],
         number: 1
     }],
+    areas: []
 };
 
 const HeaderMemo = memo(Header);
@@ -43,28 +45,35 @@ export default function HabitWindow() {
     const { setOpenTimePickerWindow } = openTimePickerObject;
 
     const [openIconWindow, setOpenIconWindow] = useState(false);
+    const [selectedAreas, setSelectedAreas] = useState([]);
 
-    const onUpdateHabitName = (inputText) => {
-        const copyHabitItem = { ...habitItem };
-        copyHabitItem.name = inputText;
-        setHabitItem(copyHabitItem);
-    };
+    const onUpdateHabitName = useCallback((inputText) => {
+        setHabitItem(prev => ({
+            ...prev,
+            name: inputText
+        }));
+    }, [setHabitItem]);
 
-    const setIconSelected = (icon) => {
+    const setIconSelected = useCallback((icon) => {
         setHabitItem(prev => ({
             ...prev,
             icon
         }));
-    };
+    }, [setHabitItem]);
 
-    function changeRepeatOption(repeatOption) {
+    const changeRepeatOption = useCallback((repeatOption) => {
         const filterIsSelected = repeatOption.filter((singleOption) => singleOption.isSelected);
         const nameOfSelectedOption = filterIsSelected[0].name;
-        const copyHabitItem = { ...habitItem };
-        copyHabitItem.frequency[0].type = nameOfSelectedOption;
-        copyHabitItem.isTask = nameOfSelectedOption === "None";
-        setHabitItem(copyHabitItem);
-    }
+
+        setHabitItem(prev => ({
+            ...prev,
+            frequency: [{
+                ...prev.frequency[0],
+                type: nameOfSelectedOption
+            }],
+            isTask: nameOfSelectedOption === "None"
+        }));
+    }, [setHabitItem]);
 
     const updateSelectedDays = useCallback((updatedDays) => {
         setHabitItem(prev => ({
@@ -97,22 +106,32 @@ export default function HabitWindow() {
         }));
     }, [setHabitItem]);
 
+    const getSelectedAreaItems = useCallback((selectedAreaItems) => {
+        setSelectedAreas(selectedAreaItems);
+        setHabitItem(prev => ({
+            ...prev,
+            areas: selectedAreaItems
+        }));
+    }, [setHabitItem]);
+
     useEffect(() => {
         if (!openHabitWindow) {
-            setHabitItem(defaultHabitState);
+            const areasToKeep = habitItem.areas || [];
+            setHabitItem({
+                ...defaultHabitState,
+                areas: areasToKeep
+            });
             setOpenTimePickerWindow(false);
         }
-    }, [openHabitWindow, setOpenTimePickerWindow, setHabitItem]);
+    }, [openHabitWindow, setOpenTimePickerWindow, setHabitItem, habitItem.areas]);
 
     return (
         <>
-            {/* Soft Layer */}
             <div
                 className={`fixed inset-0 bg-black opacity-25 z-40 ${openHabitWindow ? "block" : "hidden"}`}
                 onClick={() => setOpenHabitWindow(false)}
             />
 
-            {/* Modal */}
             <div
                 className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-50 bg-white rounded-lg shadow-lg ${openHabitWindow ? "block" : "hidden"}`}
             >
@@ -133,6 +152,7 @@ export default function HabitWindow() {
                         onDateChange={updateDueDate}
                     />
                     <Reminder />
+                    <AreasNewHabit onChange={getSelectedAreaItems}/>
                     <SaveButton habit={habitItem} />
                 </div>
             </div>

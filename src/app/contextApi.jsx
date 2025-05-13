@@ -1,7 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useState } from 'react'
-import {faChartSimple, faLayerGroup, faRectangleList} from "@fortawesome/free-solid-svg-icons";
+import {
+    faChartSimple,
+    faCode,
+    faGraduationCap,
+    faLayerGroup,
+    faRectangleList,
+    faUser
+} from "@fortawesome/free-solid-svg-icons";
 import {faIcons} from "@fortawesome/free-solid-svg-icons";
 
 const defaultHabitState = {
@@ -53,6 +60,10 @@ const GlobalContext = createContext({
     tasksObject: {
         tasks: [],
         setTasks: () => {},
+    },
+    allAreasObject: {
+        allAreas: [],
+        setAllAreas: () => {},
     }
 })
 
@@ -62,7 +73,14 @@ export const GlobalContextProvider = ({ children }) => {
         { name: "All Habits", isSelected: true, icon: faRectangleList },
         { name: "Statistics", isSelected: false, icon: faChartSimple },
         { name: "Areas", isSelected: false, icon: faLayerGroup },
-    ])
+    ]);
+
+    const [allAreas, setAllAreas] = useState([
+        {id: 1, icon: faUser, name: "All"},
+        {id: 2, icon: faGraduationCap, name: "Study"},
+        {id: 3, icon: faCode, name: "Code"},
+    ]);
+
     {/* add rewards*/}
 
     const [openSideBar, setOpenSideBar] = useState(false);
@@ -85,6 +103,7 @@ export const GlobalContextProvider = ({ children }) => {
             },
             openTimePickerObject: { openTimePickerWindow, setOpenTimePickerWindow },
             tasksObject: { tasks, setTasks },
+            allAreasObject: { allAreas, setAllAreas },
         }}>
             {children}
         </GlobalContext.Provider>
