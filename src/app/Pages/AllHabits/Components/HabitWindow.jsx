@@ -116,14 +116,14 @@ export default function HabitWindow() {
 
     useEffect(() => {
         if (!openHabitWindow) {
-            const areasToKeep = habitItem.areas || [];
             setHabitItem({
                 ...defaultHabitState,
-                areas: areasToKeep
+                areas: []
             });
             setOpenTimePickerWindow(false);
+            setSelectedAreas([]);
         }
-    }, [openHabitWindow, setOpenTimePickerWindow, setHabitItem, habitItem.areas]);
+    }, [openHabitWindow, setOpenTimePickerWindow, setHabitItem]);
 
     return (
         <>
@@ -133,7 +133,7 @@ export default function HabitWindow() {
             />
 
             <div
-                className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-50 bg-white rounded-lg shadow-lg ${openHabitWindow ? "block" : "hidden"}`}
+                className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-md z-50 bg-white rounded-lg shadow-lg ${openHabitWindow ? "block" : "hidden"} max-h-[90vh] overflow-y-auto`}
             >
                 <div className="p-6">
                     <HeaderMemo />

@@ -19,7 +19,7 @@ const MenuProps = {
             maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
             width: 250,
         },
-    },
+    }
 };
 
 const getAreaIcon = (areaName) => {
@@ -47,8 +47,9 @@ function getStyles(name, selectedAreas, theme) {
 
 export default function MultipleSelectChip({ onChange }) {
     const theme = useTheme();
-    const { allAreasObject } = useGlobalContextProvider();
+    const { allAreasObject, habitWindowObject } = useGlobalContextProvider();
     const { allAreas } = allAreasObject;
+    const { openHabitWindow } = habitWindowObject;
 
     const [selectedAreas, setSelectedAreas] = React.useState([]);
     const [selectedAreasItems, setSelectedAreasItems] = React.useState([]);
@@ -57,10 +58,19 @@ export default function MultipleSelectChip({ onChange }) {
         const {
             target: { value },
         } = event;
+
         setSelectedAreas(
             typeof value === 'string' ? value.split(',') : value,
         );
     };
+
+
+    React.useEffect(() => {
+        if (!openHabitWindow) {
+            setSelectedAreas([]);
+            setSelectedAreasItems([]);
+        }
+    }, [openHabitWindow]);
 
     const filteredAreas = allAreas.filter((area) => area.name !== "All");
 
@@ -76,7 +86,6 @@ export default function MultipleSelectChip({ onChange }) {
             setSelectedAreasItems(selectedAreasObjects);
         }
     }, [selectedAreas, allAreas, selectedAreasItems]);
-
 
     React.useEffect(() => {
         if (onChange && selectedAreasItems.length > 0) {
