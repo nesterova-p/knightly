@@ -5,7 +5,7 @@ import {useGlobalContextProvider} from "../contextApi";
 import {useEffect, useState} from "react";
 import Areas from "../Pages/Areas/Areas";
 import Statistics from "../Pages/Statistics/Statistics";
-import AllHabits from "../Pages/AllHabits/AllHabits";
+import AllHabits from "../AllHabits";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 

@@ -1,38 +1,35 @@
 import { useGlobalContextProvider } from "../../../../contextApi";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
+import {addNewHabit} from "../../../../utils/addNewHabit.jsx";
 
 export default function SaveButton({ habit }) {
-    const { habitWindowObject } = useGlobalContextProvider();
+    const { habitWindowObject, allHabitObject } = useGlobalContextProvider();
     const { setOpenHabitWindow } = habitWindowObject;
+    const { allHabits, setAllHabits } = allHabitObject;
 
-    const handleSaveHabit = () => {
-        if (!habit.name.trim()) {
-            alert("Please enter a name");
-            return;
+    function checkNewHabitObject() {
+        if(habit.name.trim() === "") {
+            return console.log("Please enter a name");
         }
 
-        const itemToSave = {
-            ...habit,
-            _id: habit._id || uuidv4(),
-            createdAt: new Date().toISOString(),
-        };
+        const habitExist = allHabits.some(
+            (single) => single.name === habit.name
+        );
 
-
-        if (habit.isTask) {
-            console.log("Saving task:", itemToSave);
-            // database for tasks
+        if (!habitExist) {
+            const success = addNewHabit({allHabits, setAllHabits, newHabit: habit});
+            if (success) {
+                setOpenHabitWindow(false);
+            }
         } else {
-            console.log("Saving habit:", itemToSave);
-            // database for habits
+            console.log("Habit already exists");
         }
-
-        setOpenHabitWindow(false);
-    };
+    }
 
     return (
         <button
-            onClick={handleSaveHabit}
+            onClick={checkNewHabitObject}
             className="w-full py-3 bg-primary text-white font-medium rounded-md hover:bg-primary transition-colors"
         >
             {habit.isTask ? "Add a Task" : "Add a Habit"}

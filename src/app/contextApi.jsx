@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from 'react'
+import React, {createContext, useContext, useEffect, useState} from 'react'
 import {
     faChartSimple,
     faCode,
@@ -10,6 +10,7 @@ import {
     faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {faIcons} from "@fortawesome/free-solid-svg-icons";
+import {textToIcon} from "../app/Pages/AllHabits/Components/IconWindow/IconData";
 
 const defaultHabitState = {
     _id: "",
@@ -64,6 +65,10 @@ const GlobalContext = createContext({
     allAreasObject: {
         allAreas: [],
         setAllAreas: () => {},
+    },
+    allHabitObject: {
+        allHabits: [],
+        setAllHabits: () => {},
     }
 })
 
@@ -89,6 +94,41 @@ export const GlobalContextProvider = ({ children }) => {
     const [openTimePickerWindow, setOpenTimePickerWindow] = useState(false);
     const [habitItem, setHabitItem] = useState(defaultHabitState);
     const [tasks, setTasks] = useState([]);
+    const [allHabits, setAllHabits] = useState([]);
+
+    useEffect(() => {
+        function fetchData() {
+            const allHabitsData = [{
+                _id: "",
+                name: "",
+                icon: textToIcon(faIcons),
+                isTask: false,
+                hasReminder: false,
+                reminderTime: "08:00 AM",
+                dueDate: new Date(),
+                frequency: [{
+                    type: "Daily",
+                    days: [
+                        {id: 1, name: "M", isSelected: true},
+                        {id: 2, name: "T", isSelected: false},
+                        {id: 3, name: "W", isSelected: false},
+                        {id: 4, name: "T", isSelected: false},
+                        {id: 5, name: "F", isSelected: false},
+                        {id: 6, name: "S", isSelected: false},
+                        {id: 7, name: "S", isSelected: false},
+                    ],
+                    number: 1
+                }]
+            }];
+
+            setTimeout(() => {
+                setAllHabits(allHabitsData);
+            }, 1000);
+        }
+
+        fetchData();
+    }, []);
+
 
     return (
         <GlobalContext.Provider value={{
@@ -104,6 +144,7 @@ export const GlobalContextProvider = ({ children }) => {
             openTimePickerObject: { openTimePickerWindow, setOpenTimePickerWindow },
             tasksObject: { tasks, setTasks },
             allAreasObject: { allAreas, setAllAreas },
+            allHabitObject: { allHabits, setAllHabits },
         }}>
             {children}
         </GlobalContext.Provider>
