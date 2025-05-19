@@ -2,6 +2,7 @@ import { useGlobalContextProvider } from "../../../../contextApi";
 import { v4 as uuidv4 } from "uuid";
 import React from "react";
 import {addNewHabit} from "../../../../utils/addNewHabit.jsx";
+import toast from "react-hot-toast";
 
 export default function SaveButton({ habit }) {
     const { habitWindowObject, allHabitObject } = useGlobalContextProvider();
@@ -9,8 +10,8 @@ export default function SaveButton({ habit }) {
     const { allHabits, setAllHabits } = allHabitObject;
 
     function checkNewHabitObject() {
-        if(habit.name.trim() === "") {
-            return console.log("Please enter a name");
+        if (habit.name.trim() === "") {
+            return toast.error("The habit name field is still empty!");
         }
 
         const habitExist = allHabits.some(
@@ -23,7 +24,7 @@ export default function SaveButton({ habit }) {
                 setOpenHabitWindow(false);
             }
         } else {
-            console.log("Habit already exists");
+            toast.error("Habit already exists");
         }
     }
 

@@ -1,70 +1,93 @@
-import {Checkbox, IconButton} from "@mui/material";
+import { useGlobalContextProvider } from "../../../../contextApi";
+import { Checkbox } from "@mui/material";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCode} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { textToIcon } from "../../Components/IconWindow/IconData";
+import { faCode } from "@fortawesome/free-solid-svg-icons";
 
-export default function HabitsContainerMain() {
+export default function HabitsContainerMiddle() {
+    const { allHabitObject } = useGlobalContextProvider();
+    const { allHabits } = allHabitObject;
+
+    const nonEmptyHabits = allHabits.filter(habit => habit.name.trim() !== "");
+
     return (
         <div className="p-3">
-            <HabitCard/>
+            {nonEmptyHabits.length > 0 ? (
+                nonEmptyHabits.map((singleHabit, singleHabitIndex) => (
+                    <div key={singleHabitIndex}>
+                        <HabitCard singleHabit={singleHabit} />
+                    </div>
+                ))
+            ) : (
+                <div className="text-center text-gray-500 py-4">
+                    No habits added yet. Click "New Adventure" to create one.
+                </div>
+            )}
         </div>
-    )
+    );
 }
 
-export function HabitCard() {
+function HabitCard({ singleHabit }) {
+    const iconObject = singleHabit.icon ?
+        (typeof singleHabit.icon === 'string' ? textToIcon(singleHabit.icon) : singleHabit.icon)
+        : faCode;
+
     return (
-        <div className="flex p-3 items-center justify-between ">
+        <div className="flex p-3 items-center justify-between">
+            {/* The rounded checkbox */}
             <Checkbox
-                className="text-primary"
                 icon={<RadioButtonUncheckedIcon />}
                 checkedIcon={<CheckCircleIcon />}
                 sx={{
+                    color: "primary",
                     "&.Mui-checked": {
-                        color: '#9EC77D',
+                        color: "primary",
                     },
                 }}
             />
 
-            <div className="flex justify-between gap-2 w-full p-3 py-4 rounded-md bg-slate-50  ">
-                <div className="  w-full">
-                    <div className="flex gap-2 justify-between  ">
+            <div
+                style={{
+                    backgroundColor: "bg-slate-50"
+                }}
+                className="flex justify-between gap-2 w-full p-3 py-4 rounded-md"
+            >
+                <div className="w-full">
+                    {/* Divs for the icon and the name */}
+                    <div className="flex gap-2 justify-between">
                         <div className="flex gap-2 items-center">
                             <FontAwesomeIcon
                                 className="p-3 rounded-full w-4 h-4 bg-primary text-white"
                                 height={20}
                                 width={20}
-                                icon={faCode}
+                                icon={iconObject}
                             />
-                            <span className="">Coding</span>
+                            <span className="">{singleHabit.name}</span>
                         </div>
                     </div>
 
                     {/* Divs for the areas */}
-                    <div className="flex gap-2 mt-2  ">
-                        <div
-                            className="p-1 text-white text-[12px] rounded-md px-2 bg-primary"
-                        >
-                            <span className="text-customRed">Area1</span>
-                        </div>
-                        <div
-                            className="p-1 text-white text-[12px] rounded-md px-2 bg-primary"
-                        >
-                            <span className="text-primary">Area2</span>
-                        </div>
+                    <div className="flex gap-2 mt-3">
+                        {singleHabit.areas && singleHabit.areas.map((singleArea, index) => (
+                            <div
+                                key={index}
+                                className="p-1 text-[12px] rounded-md px-2 bg-primary text-white"
+                            >
+                                <span>{singleArea.name}</span>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-
                 <div className="w-10 flex items-center justify-center">
-                    <IconButton>
+                    <button className="focus:outline-none">
                         <MoreVertIcon />
-                    </IconButton>
+                    </button>
                 </div>
             </div>
-
-
         </div>
-    )
+    );
 }

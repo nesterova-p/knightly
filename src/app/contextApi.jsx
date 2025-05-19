@@ -10,7 +10,8 @@ import {
     faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {faIcons} from "@fortawesome/free-solid-svg-icons";
-import {textToIcon} from "../app/Pages/AllHabits/Components/IconWindow/IconData";
+import {iconToText, textToIcon} from "../app/Pages/AllHabits/Components/IconWindow/IconData";
+import {getDateString} from "../app/utils/dateFormating";
 
 const defaultHabitState = {
     _id: "",
@@ -69,6 +70,14 @@ const GlobalContext = createContext({
     allHabitObject: {
         allHabits: [],
         setAllHabits: () => {},
+    },
+    selectedCurrentDayObject:{
+        selectedCurrentDay: "",
+        setSelectedCurrentDay: () => {},
+    },
+    offsetDayObject: {
+        offsetDay: 0,
+        setOffsetDay: () => {},
     }
 })
 
@@ -95,13 +104,15 @@ export const GlobalContextProvider = ({ children }) => {
     const [habitItem, setHabitItem] = useState(defaultHabitState);
     const [tasks, setTasks] = useState([]);
     const [allHabits, setAllHabits] = useState([]);
+    const [selectedCurrentDay, setSelectedCurrentDay] = useState(() => getDateString(new Date()));
+    const [offsetDay, setOffsetDay] = useState(0);
 
     useEffect(() => {
         function fetchData() {
             const allHabitsData = [{
                 _id: "",
                 name: "",
-                icon: textToIcon(faIcons),
+                icon: iconToText(faIcons),
                 isTask: false,
                 hasReminder: false,
                 reminderTime: "08:00 AM",
@@ -145,6 +156,8 @@ export const GlobalContextProvider = ({ children }) => {
             tasksObject: { tasks, setTasks },
             allAreasObject: { allAreas, setAllAreas },
             allHabitObject: { allHabits, setAllHabits },
+            selectedCurrentDayObject: { selectedCurrentDay, setSelectedCurrentDay },
+            offsetDayObject: { offsetDay, setOffsetDay },
         }}>
             {children}
         </GlobalContext.Provider>
