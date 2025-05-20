@@ -1,6 +1,8 @@
 import React from "react";
 
 export default function DailyOptions({ allDays, setAllDays }){
+    const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+
     function selectedDays(singleDayIndex){
         const selectedCount = allDays.filter(day => day.isSelected).length;
 
@@ -33,7 +35,7 @@ export default function DailyOptions({ allDays, setAllDays }){
                                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                         }`}
                     >
-                        {singleDay.name}
+                        {dayNames[singleDayIndex]}
                     </span>
                 ))}
             </div>

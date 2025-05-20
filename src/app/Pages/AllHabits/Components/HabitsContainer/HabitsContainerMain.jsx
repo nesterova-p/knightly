@@ -6,12 +6,56 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { textToIcon } from "../../Components/IconWindow/IconData";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 
-export default function HabitsContainerMiddle() {
-    const { allHabitObject } = useGlobalContextProvider();
+export default function HabitsContainerMain() {
+    const {
+        allHabitObject,
+        selectedCurrentDayObject,
+        selectedAreaStringObject
+    } = useGlobalContextProvider();
+
     const { allHabits } = allHabitObject;
+    const { selectedCurrentDay } = selectedCurrentDayObject;
+    const { selectedAreaString } = selectedAreaStringObject;
 
-    const nonEmptyHabits = allHabits.filter(habit => habit.name.trim() !== "");
+    const [allFilteredHabits, setAllFilteredHabits] = useState([]);
+
+    useEffect(() => {
+        const currentDate = new Date(selectedCurrentDay);
+        const currentDayIndex = currentDate.getDay();
+        const dayId = currentDayIndex === 0 ? 7 : currentDayIndex;
+
+        console.log("Current day index:", dayId, "Selected area:", selectedAreaString);
+
+
+        const filteredHabitsByFrequency = allHabits.filter((singleHabit) => {
+            if (!singleHabit.frequency || !singleHabit.frequency[0] || !singleHabit.frequency[0].days) {
+                return false;
+            }
+            return singleHabit.frequency[0].days.some(
+                (day) => day.id === dayId && day.isSelected
+            );
+        });
+
+        console.log("Habits filtered by frequency:", filteredHabitsByFrequency);
+
+        let filteredHabitsByArea = [];
+        if (selectedAreaString !== "All") {
+            filteredHabitsByArea = filteredHabitsByFrequency.filter((habit) => {
+                if (!habit.areas) return false;
+                return habit.areas.some((area) => area.name === selectedAreaString);
+            });
+        } else {
+            filteredHabitsByArea = filteredHabitsByFrequency;
+        }
+
+        setAllFilteredHabits(filteredHabitsByArea);
+        console.log("Final filtered habits:", filteredHabitsByArea);
+
+    }, [selectedCurrentDay, allHabits, selectedAreaString]);
+
+    const nonEmptyHabits = allFilteredHabits.filter(habit => habit && habit.name && habit.name.trim() !== "");
 
     return (
         <div className="p-3">
@@ -37,7 +81,6 @@ function HabitCard({ singleHabit }) {
 
     return (
         <div className="flex p-3 items-center justify-between">
-            {/* The rounded checkbox */}
             <Checkbox
                 icon={<RadioButtonUncheckedIcon />}
                 checkedIcon={<CheckCircleIcon />}
@@ -65,7 +108,6 @@ function HabitCard({ singleHabit }) {
                             <span className="">{singleHabit.name}</span>
                         </div>
                     </div>
-
                     {/* Divs for the areas */}
                     <div className="flex gap-2 mt-3">
                         {singleHabit.areas && singleHabit.areas.map((singleArea, index) => (

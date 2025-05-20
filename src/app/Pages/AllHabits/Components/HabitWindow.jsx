@@ -1,5 +1,5 @@
 "use client";
-import { v4 as uuidv4 } from "uuid";
+
 import React, { memo, useState, useEffect, useCallback } from "react";
 import { useGlobalContextProvider } from "../../../contextApi";
 import { faIcons } from "@fortawesome/free-solid-svg-icons";
@@ -23,13 +23,13 @@ const defaultHabitState = {
     frequency: [{
         type: "Daily",
         days: [
-            {id: 1, name: "M", isSelected: true},
-            {id: 2, name: "T", isSelected: false},
-            {id: 3, name: "W", isSelected: false},
-            {id: 4, name: "T", isSelected: false},
-            {id: 5, name: "F", isSelected: false},
-            {id: 6, name: "S", isSelected: false},
-            {id: 7, name: "S", isSelected: false},
+            {id: 1, name: "Mo", isSelected: true},
+            {id: 2, name: "Tu", isSelected: false},
+            {id: 3, name: "We", isSelected: false},
+            {id: 4, name: "Th", isSelected: false},
+            {id: 5, name: "Fr", isSelected: false},
+            {id: 6, name: "Sa", isSelected: false},
+            {id: 7, name: "Su", isSelected: false},
         ],
         number: 1
     }],
