@@ -42,18 +42,15 @@ function HabitCard({ singleHabit }) {
                 icon={<RadioButtonUncheckedIcon />}
                 checkedIcon={<CheckCircleIcon />}
                 sx={{
-                    color: "primary",
+                    color: "#9EC77D",
                     "&.Mui-checked": {
-                        color: "primary",
+                        color: "#9EC77D",
                     },
                 }}
             />
 
             <div
-                style={{
-                    backgroundColor: "bg-slate-50"
-                }}
-                className="flex justify-between gap-2 w-full p-3 py-4 rounded-md"
+                className="bg-slate-50 flex justify-between gap-2 w-full p-3 py-4 rounded-xl"
             >
                 <div className="w-full">
                     {/* Divs for the icon and the name */}

@@ -78,6 +78,10 @@ const GlobalContext = createContext({
     offsetDayObject: {
         offsetDay: 0,
         setOffsetDay: () => {},
+    },
+    selectedAreasObject: {
+        selectedAreas: {},
+        setSelectedAreas: () => {},
     }
 })
 
@@ -106,6 +110,7 @@ export const GlobalContextProvider = ({ children }) => {
     const [allHabits, setAllHabits] = useState([]);
     const [selectedCurrentDay, setSelectedCurrentDay] = useState(() => getDateString(new Date()));
     const [offsetDay, setOffsetDay] = useState(0);
+    const [selectedAreas, setSelectedAreas] = useState({});
 
     useEffect(() => {
         function fetchData() {
@@ -158,6 +163,10 @@ export const GlobalContextProvider = ({ children }) => {
             allHabitObject: { allHabits, setAllHabits },
             selectedCurrentDayObject: { selectedCurrentDay, setSelectedCurrentDay },
             offsetDayObject: { offsetDay, setOffsetDay },
+            selectedAreasObject: {
+                selectedAreas,
+                setSelectedAreas,
+            },
         }}>
             {children}
         </GlobalContext.Provider>
