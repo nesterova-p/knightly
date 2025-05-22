@@ -12,6 +12,7 @@ import {
 import {faIcons} from "@fortawesome/free-solid-svg-icons";
 import {iconToText, textToIcon} from "../app/Pages/AllHabits/Components/IconWindow/IconData";
 import {getDateString} from "../app/utils/dateFormating";
+import { v4 as uuidv4 } from 'uuid';
 
 const defaultHabitState = {
     _id: "",
@@ -34,6 +35,7 @@ const defaultHabitState = {
         ],
         number: 1
     }],
+    completedDays: []
 };
 
 const GlobalContext = createContext({
@@ -139,7 +141,8 @@ export const GlobalContextProvider = ({ children }) => {
                         {id: 7, name: "Su", isSelected: false},
                     ],
                     number: 1
-                }]
+                }],
+                completedDays: []
             }];
 
             setTimeout(() => {
@@ -149,7 +152,6 @@ export const GlobalContextProvider = ({ children }) => {
 
         fetchData();
     }, []);
-
 
     return (
         <GlobalContext.Provider value={{

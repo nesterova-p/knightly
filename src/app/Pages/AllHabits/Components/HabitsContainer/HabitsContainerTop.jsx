@@ -27,8 +27,6 @@ export default function HabitsContainerTop() {
         setSelectedCurrentDay(getDateString(new Date(), offsetDay));
     }, [offsetDay, setSelectedCurrentDay]);
 
-    console.log(selectedCurrentDay);
-
     const handleOpenHabitWindow = () => {
         setOpenHabitWindow(true);
     };

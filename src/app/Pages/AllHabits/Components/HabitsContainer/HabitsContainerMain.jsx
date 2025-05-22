@@ -8,6 +8,7 @@ import { textToIcon } from "../../Components/IconWindow/IconData";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import EmptyPlaceHolder from "../../../AllHabits/Components/EmptyPlaceHolder";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function HabitsContainerMain() {
     const {
@@ -16,10 +17,9 @@ export default function HabitsContainerMain() {
         selectedAreaStringObject
     } = useGlobalContextProvider();
 
-    const { allHabits } = allHabitObject;
+    const { allHabits, setAllHabits } = allHabitObject;
     const { selectedCurrentDay } = selectedCurrentDayObject;
     const { selectedAreaString } = selectedAreaStringObject;
-
     const [allFilteredHabits, setAllFilteredHabits] = useState([]);
 
     useEffect(() => {
@@ -29,7 +29,6 @@ export default function HabitsContainerMain() {
 
         console.log("Current day index:", dayId, "Selected area:", selectedAreaString);
 
-
         const filteredHabitsByFrequency = allHabits.filter((singleHabit) => {
             if (!singleHabit.frequency || !singleHabit.frequency[0] || !singleHabit.frequency[0].days) {
                 return false;
@@ -38,8 +37,6 @@ export default function HabitsContainerMain() {
                 (day) => day.id === dayId && day.isSelected
             );
         });
-
-        console.log("Habits filtered by frequency:", filteredHabitsByFrequency);
 
         let filteredHabitsByArea = [];
         if (selectedAreaString !== "All") {
@@ -52,7 +49,6 @@ export default function HabitsContainerMain() {
         }
 
         setAllFilteredHabits(filteredHabitsByArea);
-        console.log("Final filtered habits:", filteredHabitsByArea);
 
     }, [selectedCurrentDay, allHabits, selectedAreaString]);
 
@@ -63,7 +59,12 @@ export default function HabitsContainerMain() {
             {nonEmptyHabits.length > 0 ? (
                 nonEmptyHabits.map((singleHabit, singleHabitIndex) => (
                     <div key={singleHabitIndex}>
-                        <HabitCard singleHabit={singleHabit} />
+                        <HabitCard
+                            singleHabit={singleHabit}
+                            selectedCurrentDay={selectedCurrentDay}
+                            allHabits={allHabits}
+                            setAllHabits={setAllHabits}
+                        />
                     </div>
                 ))
             ) : (
@@ -73,16 +74,86 @@ export default function HabitsContainerMain() {
     );
 }
 
-function HabitCard({ singleHabit }) {
+function HabitCard({ singleHabit, selectedCurrentDay, allHabits, setAllHabits }) {
+    console.log("Habit:", singleHabit.name);
+    console.log("CompletedDays:", singleHabit.completedDays);
+    console.log("Selected day:", selectedCurrentDay);
+
     const iconObject = singleHabit.icon ?
         (typeof singleHabit.icon === 'string' ? textToIcon(singleHabit.icon) : singleHabit.icon)
         : faCode;
+
+    const isChecked = Boolean(
+        singleHabit.completedDays && singleHabit.completedDays.some(
+            (day) => day.date === selectedCurrentDay
+        )
+    );
+
+    console.log("Is checked:", isChecked);
+
+
+    function handleCheckboxChange(event) {
+        const checked = event.target.checked;
+        console.log("Adding completed day:", selectedCurrentDay);
+        if (checked) {
+            checkHabit();
+        } else {
+            uncheckHabit();
+        }
+    }
+
+    function checkHabit() {
+        const completedDay = {
+            _id: uuidv4(),
+            date: selectedCurrentDay,
+        };
+        console.log("Removing completed day:", selectedCurrentDay);
+
+        const updatedHabits = allHabits.map((habit) => {
+            if (habit._id === singleHabit._id) {
+                const currentCompletedDays = habit.completedDays || [];
+                const isAlreadyCompleted = currentCompletedDays.some(
+                    (day) => day.date === selectedCurrentDay
+                );
+
+                if (!isAlreadyCompleted) {
+                    return {
+                        ...habit,
+                        completedDays: [...currentCompletedDays, completedDay],
+                    };
+                }
+                return habit;
+            }
+            return habit;
+        });
+
+        setAllHabits(updatedHabits);
+    }
+
+    function uncheckHabit() {
+        const updatedHabits = allHabits.map((habit) => {
+            if (habit._id === singleHabit._id) {
+                const updatedCompletedDays = habit.completedDays ?
+                    habit.completedDays.filter((day) => day.date !== selectedCurrentDay) : [];
+
+                return {
+                    ...habit,
+                    completedDays: updatedCompletedDays,
+                };
+            }
+            return habit;
+        });
+
+        setAllHabits(updatedHabits);
+    }
 
     return (
         <div className="flex p-3 items-center justify-between">
             <Checkbox
                 icon={<RadioButtonUncheckedIcon />}
                 checkedIcon={<CheckCircleIcon />}
+                checked={isChecked}
+                onChange={handleCheckboxChange}
                 sx={{
                     color: "#9EC77D",
                     "&.Mui-checked": {
