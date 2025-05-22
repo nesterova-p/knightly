@@ -7,6 +7,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { textToIcon } from "../../Components/IconWindow/IconData";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import EmptyPlaceHolder from "../../../AllHabits/Components/EmptyPlaceHolder";
 
 export default function HabitsContainerMain() {
     const {
@@ -66,9 +67,7 @@ export default function HabitsContainerMain() {
                     </div>
                 ))
             ) : (
-                <div className="text-center text-gray-500 py-4">
-                    No habits added yet. Click "New Adventure" to create one.
-                </div>
+                <EmptyPlaceHolder/>
             )}
         </div>
     );
