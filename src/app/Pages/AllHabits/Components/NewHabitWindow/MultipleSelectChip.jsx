@@ -47,9 +47,10 @@ function getStyles(name, selectedAreas, theme) {
 
 export default function MultipleSelectChip({ onChange }) {
     const theme = useTheme();
-    const { allAreasObject, habitWindowObject } = useGlobalContextProvider();
+    const { allAreasObject, habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
     const { allAreas } = allAreasObject;
     const { openHabitWindow } = habitWindowObject;
+    const { selectedItems } = selectedItemsObject;
 
     const [selectedAreas, setSelectedAreas] = React.useState([]);
     const [selectedAreasItems, setSelectedAreasItems] = React.useState([]);
@@ -66,7 +67,16 @@ export default function MultipleSelectChip({ onChange }) {
 
 
     React.useEffect(() => {
-        if (!openHabitWindow) {
+        if (openHabitWindow) {
+            if (selectedItems && selectedItems.areas) {
+                const areaNames = selectedItems.areas.map(area => area.name);
+                setSelectedAreas(areaNames);
+                setSelectedAreasItems(selectedItems.areas);
+            } else {
+                setSelectedAreas([]);
+                setSelectedAreasItems([]);
+            }
+        } else {
             setSelectedAreas([]);
             setSelectedAreasItems([]);
         }
@@ -88,7 +98,7 @@ export default function MultipleSelectChip({ onChange }) {
     }, [selectedAreas, allAreas, selectedAreasItems]);
 
     React.useEffect(() => {
-        if (onChange && selectedAreasItems.length > 0) {
+        if (onChange && selectedAreasItems.length >= 0) {
             onChange(selectedAreasItems);
         }
     }, [selectedAreasItems, onChange]);

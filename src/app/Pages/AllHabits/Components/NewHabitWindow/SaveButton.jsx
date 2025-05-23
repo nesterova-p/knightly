@@ -48,18 +48,17 @@ export default function SaveButton({ habit }) {
             }
         } else {
             const habitExist = allHabits.some(
-                (singleHabit) => singleHabit.name === habit.name && singleHabit._id !== habit._id
+                (singleHabit) => singleHabit.name === habit.name && singleHabit._id !== selectedItems._id
             );
 
             if (!habitExist) {
                 try {
                     setAllHabits(prev => prev.map((singleHabit) =>
-                        singleHabit._id === habit._id ? {...habit} : singleHabit
+                        singleHabit._id === selectedItems._id ? {...habit, _id: selectedItems._id} : singleHabit
                     ));
                     toast.success(`${habit?.isTask ? "Task" : "Habit"} updated successfully!`);
                     setOpenHabitWindow(false);
 
-                    // Clear selected items after a short delay to ensure state updates
                     setTimeout(() => {
                         setSelectedItems(null);
                     }, 100);
