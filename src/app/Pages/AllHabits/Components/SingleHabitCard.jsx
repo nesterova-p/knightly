@@ -3,7 +3,7 @@ import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import {iconToText, textToIcon} from "../../AllHabits/Components/IconWindow/IconData";;
+import {iconToText, textToIcon} from "../../AllHabits/Components/IconWindow/IconData";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { useGlobalContextProvider } from "../../../contextApi";
 import { v4 as uuidv4 } from 'uuid';
@@ -11,11 +11,16 @@ import { v4 as uuidv4 } from 'uuid';
 export function SingleHabitCard({ singleHabit }) {
     const {
         allHabitObject,
-        selectedCurrentDayObject
+        selectedCurrentDayObject,
+        openDropDownObject,
+        dropDownPositionsObject
     } = useGlobalContextProvider();
 
     const { allHabits, setAllHabits } = allHabitObject;
     const { selectedCurrentDay } = selectedCurrentDayObject;
+    const { setOpenDropDown } = openDropDownObject;
+    const { setDropDownPositions } = dropDownPositionsObject;
+
 
     const iconObject = singleHabit.icon ?
         (typeof singleHabit.icon === 'string' ? textToIcon(singleHabit.icon) : singleHabit.icon)
@@ -81,6 +86,17 @@ export function SingleHabitCard({ singleHabit }) {
         setAllHabits(updatedHabits);
     }
 
+    function handleClickThreeDots(event) {
+        const target = event.target;
+        const rect = target.getBoundingClientRect();
+        const top = rect.top;
+        const left = rect.left;
+        setDropDownPositions({ top, left });
+
+        event.stopPropagation();
+        setOpenDropDown(true);
+    }
+
     return (
         <div className="flex p-3 items-center justify-between">
             <Checkbox
@@ -124,8 +140,11 @@ export function SingleHabitCard({ singleHabit }) {
                 </div>
 
                 <div className="w-10 flex items-center justify-center">
-                    <button className="focus:outline-none">
-                        <MoreVertIcon />
+                    <button
+                        className="focus:outline-none"
+                        onClick={handleClickThreeDots}
+                    >
+                        <MoreVertIcon sx={{ color: "gray" }} />
                     </button>
                 </div>
             </div>

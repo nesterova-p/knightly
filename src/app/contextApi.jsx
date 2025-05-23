@@ -92,6 +92,14 @@ const GlobalContext = createContext({
     allFilteredHabitsObject: {
         allFilteredHabits: [],
         setAllFilteredHabits: () => {},
+    },
+    openDropDownObject: {
+        openDropDown: false,
+        setOpenDropDown: () => {},
+    },
+    dropDownPositionsObject: {
+        dropDownPositions: { top: 0, left: 0 },
+        setDropDownPositions: () => {},
     }
 })
 
@@ -121,6 +129,12 @@ export const GlobalContextProvider = ({ children }) => {
     const [selectedAreas, setSelectedAreas] = useState({});
     const [selectedAreaString, setSelectedAreaString] = useState("All");
     const [allFilteredHabits, setAllFilteredHabits] = useState([]);
+    const [openDropDown, setOpenDropDown] = useState(false);
+    const [dropDownPositions, setDropDownPositions] = useState({
+        top: 0,
+        left: 0,
+    });
+
 
     useEffect(() => {
         function fetchData() {
@@ -187,6 +201,14 @@ export const GlobalContextProvider = ({ children }) => {
             allFilteredHabitsObject: {
                 allFilteredHabits,
                 setAllFilteredHabits,
+            },
+            openDropDownObject: {
+                openDropDown,
+                setOpenDropDown
+            },
+            dropDownPositionsObject: {
+                dropDownPositions,
+                setDropDownPositions
             }
         }}>
             {children}

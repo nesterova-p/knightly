@@ -5,12 +5,15 @@ import HabitsCompleted from "./Pages/AllHabits/Components/HabitsCompleted";
 import HabitWindow from "./Pages/AllHabits/Components/HabitWindow";
 import { Toaster } from "react-hot-toast";
 import AreasContainer from "./Pages/AllHabits/Components/AreasContainer";
+import DropDown from "../app/utils/DropDown";
+
 
 export default function AllHabits() {
     return (
         <div className = 'max-lg:flex-col w-full flex flex-row gap-0'>
             <Toaster/>
             <HabitWindow/>
+            <DropDown/>
             <div className={"flex-col flex-grow m-4"}>
                 <AllHabitsTop/>
                 <AreasContainer/>
