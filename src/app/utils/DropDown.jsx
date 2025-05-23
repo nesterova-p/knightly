@@ -7,11 +7,14 @@ export default function DropDown() {
     const {
         openDropDownObject,
         dropDownPositionsObject,
-        openConfirmationWindowObject
+        openConfirmationWindowObject,
+        selectedItemsObject
     } = useGlobalContextProvider();
 
     const { openDropDown, setOpenDropDown } = openDropDownObject;
     const { dropDownPositions } = dropDownPositionsObject;
+    const {openConfirmationWindow ,setOpenConfirmationWindow } = openConfirmationWindowObject;
+    const { setSelectedItems } = selectedItemsObject;
     const ref = useRef(null);
 
     const dropDownMenuItems = [
@@ -20,8 +23,6 @@ export default function DropDown() {
     ];
     const [hover, setHover] = useState(false);
     const [indexHovered, setIndexHovered] = useState(0);
-
-    const {setOpenConfirmationWindow} = openConfirmationWindowObject;
 
     function handleHoverChange(index, state) {
         setIndexHovered(index);
@@ -32,6 +33,10 @@ export default function DropDown() {
         function handleOutsideClick(event) {
             if (ref && !ref.current?.contains(event.target)) {
                 setOpenDropDown(false);
+                if(!openConfirmationWindow){
+                    setSelectedItems(null);
+                }
+
             }
         }
 
@@ -39,12 +44,11 @@ export default function DropDown() {
         return () => {
             document.removeEventListener("click", handleOutsideClick);
         };
-    }, [openDropDown, setOpenDropDown]);
+    }, [openDropDown, setOpenDropDown, setSelectedItems]);
 
-    function handleClickedOption(index){
-        switch (index){
+    function handleClickedOption(index) {
+        switch (index) {
             case 0:
-                console.log("Edit");
                 break;
             case 1:
                 setOpenConfirmationWindow(true);

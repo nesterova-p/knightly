@@ -13,14 +13,15 @@ export function SingleHabitCard({ singleHabit }) {
         allHabitObject,
         selectedCurrentDayObject,
         openDropDownObject,
-        dropDownPositionsObject
+        dropDownPositionsObject,
+        selectedItemsObject
     } = useGlobalContextProvider();
 
     const { allHabits, setAllHabits } = allHabitObject;
     const { selectedCurrentDay } = selectedCurrentDayObject;
     const { setOpenDropDown } = openDropDownObject;
     const { setDropDownPositions } = dropDownPositionsObject;
-
+    const { setSelectedItems } = selectedItemsObject;
 
     const iconObject = singleHabit.icon ?
         (typeof singleHabit.icon === 'string' ? textToIcon(singleHabit.icon) : singleHabit.icon)
@@ -92,6 +93,8 @@ export function SingleHabitCard({ singleHabit }) {
         const top = rect.top;
         const left = rect.left;
         setDropDownPositions({ top, left });
+        console.log(singleHabit);
+        setSelectedItems(singleHabit);
 
         event.stopPropagation();
         setOpenDropDown(true);
@@ -114,7 +117,6 @@ export function SingleHabitCard({ singleHabit }) {
 
             <div className="bg-slate-50 flex justify-between gap-2 w-full p-3 py-4 rounded-xl">
                 <div className="w-full">
-                    {/* Divs for the icon and the name */}
                     <div className="flex gap-2 justify-between">
                         <div className="flex gap-2 items-center">
                             <FontAwesomeIcon
@@ -126,7 +128,6 @@ export function SingleHabitCard({ singleHabit }) {
                             <span className="">{singleHabit.name}</span>
                         </div>
                     </div>
-                    {/* Divs for the areas */}
                     <div className="flex gap-2 mt-3">
                         {singleHabit.areas && singleHabit.areas.map((singleArea, index) => (
                             <div

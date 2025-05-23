@@ -104,11 +104,14 @@ const GlobalContext = createContext({
     openConfirmationWindowObject:{
         openConfirmationWindow: false,
         setOpenConfirmationWindow: () => {},
+    },
+    selectedItemsObject: {
+        selectedItems: null,
+        setSelectedItems: () => {},
     }
 })
 
 export const GlobalContextProvider = ({ children }) => {
-    // initial menu state
     const [menuItems, setMenuItems] = useState([
         { name: "All Habits", isSelected: true, icon: faRectangleList },
         { name: "Statistics", isSelected: false, icon: faChartSimple },
@@ -139,7 +142,7 @@ export const GlobalContextProvider = ({ children }) => {
         left: 0,
     });
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
-
+    const [selectedItems, setSelectedItems] = useState(null);
 
     useEffect(() => {
         function fetchData() {
@@ -218,6 +221,10 @@ export const GlobalContextProvider = ({ children }) => {
             openConfirmationWindowObject:{
                 openConfirmationWindow,
                 setOpenConfirmationWindow
+            },
+            selectedItemsObject: {
+                selectedItems,
+                setSelectedItems
             }
         }}>
             {children}

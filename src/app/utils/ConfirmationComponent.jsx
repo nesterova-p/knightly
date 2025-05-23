@@ -1,8 +1,13 @@
 import { useGlobalContextProvider } from "../contextApi";
 
 export default function ConfirmationComponent() {
-    const {openConfirmationWindowObject} = useGlobalContextProvider();
-    const {openConfirmationWindow, setOpenConfirmationWindow} = openConfirmationWindowObject;
+    const {
+        openConfirmationWindowObject,
+        selectedItemsObject
+    } = useGlobalContextProvider();
+
+    const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
+    const { setSelectedItems } = selectedItemsObject;
 
     return(
         <div
@@ -19,7 +24,7 @@ export default function ConfirmationComponent() {
             <span className={"font-bold text-xl"}>
                 {'Are you sure?'}
             </span>
-            <span className={"text-center text-[13xl] opacity-75"}>
+            <span className={"text-center text-[13px] opacity-75"}>
                 Are you sure you want to delete this item?
                 <br/>
                 This action cannot be undone
@@ -27,13 +32,15 @@ export default function ConfirmationComponent() {
             <div className={"flex gap-2 mt-5"}>
                 <button
                     className={"border text-[13px] w-full px-10 p-3 rounded-md"}
-                    onClick={() => setOpenConfirmationWindow(false)}
+                    onClick={() => {
+                        setOpenConfirmationWindow(false);
+                        setSelectedItems(null);
+                    }}
                 >
                     Cancel
                 </button>
                 <button
                     className={"text-[13px] w-full px-10 p-3 rounded-md text-white bg-primary"}
-
                 >
                     Delete
                 </button>
