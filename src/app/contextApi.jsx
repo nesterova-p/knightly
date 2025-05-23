@@ -88,6 +88,10 @@ const GlobalContext = createContext({
     selectedAreaStringObject: {
         selectedAreaString: "All",
         setSelectedAreaString: () => {},
+    },
+    allFilteredHabitsObject: {
+        allFilteredHabits: [],
+        setAllFilteredHabits: () => {},
     }
 })
 
@@ -105,8 +109,6 @@ export const GlobalContextProvider = ({ children }) => {
         {id: 3, icon: faCode, name: "Code"},
     ]);
 
-    {/* add rewards*/}
-
     const [openSideBar, setOpenSideBar] = useState(false);
     const [isDarkMode, setDarkMode] = useState(false);
     const [openHabitWindow, setOpenHabitWindow] = useState(false);
@@ -118,13 +120,14 @@ export const GlobalContextProvider = ({ children }) => {
     const [offsetDay, setOffsetDay] = useState(0);
     const [selectedAreas, setSelectedAreas] = useState({});
     const [selectedAreaString, setSelectedAreaString] = useState("All");
+    const [allFilteredHabits, setAllFilteredHabits] = useState([]);
 
     useEffect(() => {
         function fetchData() {
             const allHabitsData = [{
-                _id: "",
-                name: "",
-                icon: iconToText(faIcons),
+                _id: uuidv4(),
+                name: "Test Habit",
+                icon: iconToText(faCode),
                 isTask: false,
                 hasReminder: false,
                 reminderTime: "08:00 AM",
@@ -142,6 +145,9 @@ export const GlobalContextProvider = ({ children }) => {
                     ],
                     number: 1
                 }],
+                areas: [
+                    { _id: uuidv4(), icon: faCode, name: "Code" }
+                ],
                 completedDays: []
             }];
 
@@ -177,6 +183,10 @@ export const GlobalContextProvider = ({ children }) => {
             selectedAreaStringObject: {
                 selectedAreaString,
                 setSelectedAreaString,
+            },
+            allFilteredHabitsObject: {
+                allFilteredHabits,
+                setAllFilteredHabits,
             }
         }}>
             {children}
