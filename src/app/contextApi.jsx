@@ -100,6 +100,10 @@ const GlobalContext = createContext({
     dropDownPositionsObject: {
         dropDownPositions: { top: 0, left: 0 },
         setDropDownPositions: () => {},
+    },
+    openConfirmationWindowObject:{
+        openConfirmationWindow: false,
+        setOpenConfirmationWindow: () => {},
     }
 })
 
@@ -134,6 +138,7 @@ export const GlobalContextProvider = ({ children }) => {
         top: 0,
         left: 0,
     });
+    const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
 
 
     useEffect(() => {
@@ -209,6 +214,10 @@ export const GlobalContextProvider = ({ children }) => {
             dropDownPositionsObject: {
                 dropDownPositions,
                 setDropDownPositions
+            },
+            openConfirmationWindowObject:{
+                openConfirmationWindow,
+                setOpenConfirmationWindow
             }
         }}>
             {children}

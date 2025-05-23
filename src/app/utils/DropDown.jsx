@@ -6,7 +6,8 @@ import { useGlobalContextProvider } from "../contextApi";
 export default function DropDown() {
     const {
         openDropDownObject,
-        dropDownPositionsObject
+        dropDownPositionsObject,
+        openConfirmationWindowObject
     } = useGlobalContextProvider();
 
     const { openDropDown, setOpenDropDown } = openDropDownObject;
@@ -19,6 +20,8 @@ export default function DropDown() {
     ];
     const [hover, setHover] = useState(false);
     const [indexHovered, setIndexHovered] = useState(0);
+
+    const {setOpenConfirmationWindow} = openConfirmationWindowObject;
 
     function handleHoverChange(index, state) {
         setIndexHovered(index);
@@ -37,6 +40,20 @@ export default function DropDown() {
             document.removeEventListener("click", handleOutsideClick);
         };
     }, [openDropDown, setOpenDropDown]);
+
+    function handleClickedOption(index){
+        switch (index){
+            case 0:
+                console.log("Edit");
+                break;
+            case 1:
+                setOpenConfirmationWindow(true);
+                setOpenDropDown(false);
+                break;
+            default:
+                break;
+        }
+    }
 
     return (
         <div
@@ -57,6 +74,7 @@ export default function DropDown() {
                     key={index}
                     onMouseEnter={() => handleHoverChange(index, true)}
                     onMouseLeave={() => handleHoverChange(index, false)}
+                    onClick={() => handleClickedOption(index)}
                     className="flex gap-2 items-center rounded-md p-3 select-none cursor-pointer transition-all"
                 >
                     <FontAwesomeIcon
