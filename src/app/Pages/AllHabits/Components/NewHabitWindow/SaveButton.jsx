@@ -1,30 +1,75 @@
 import { useGlobalContextProvider } from "../../../../contextApi";
-import { v4 as uuidv4 } from "uuid";
-import React from "react";
-import {addNewHabit} from "../../../../utils/addNewHabit.jsx";
+import React, { useState, useEffect } from "react";
+import { addNewHabit } from "../../../../utils/addNewHabit.jsx";
 import toast from "react-hot-toast";
 
 export default function SaveButton({ habit }) {
-    const { habitWindowObject, allHabitObject } = useGlobalContextProvider();
-    const { setOpenHabitWindow } = habitWindowObject;
+    const {
+        allHabitObject,
+        habitWindowObject,
+        selectedItemsObject
+    } = useGlobalContextProvider();
+
     const { allHabits, setAllHabits } = allHabitObject;
+    const { setOpenHabitWindow, openHabitWindow } = habitWindowObject;
+    const { selectedItems, setSelectedItems } = selectedItemsObject;
+    const [buttonText, setButtonText] = useState("Add a Habit");
+
+    useEffect(() => {
+        if (selectedItems) {
+            setButtonText(habit?.isTask ? "Edit Task" : "Edit Habit");
+        } else {
+            setButtonText(habit?.isTask ? "Add a Task" : "Add a Habit");
+        }
+    }, [openHabitWindow, selectedItems, habit?.isTask]);
 
     function checkNewHabitObject() {
         if (habit.name.trim() === "") {
             return toast.error("The habit name field is still empty!");
         }
 
-        const habitExist = allHabits.some(
-            (single) => single.name === habit.name
-        );
+        if (!selectedItems) {
+            const habitExist = allHabits.some(
+                (singleHabit) => singleHabit.name === habit.name
+            );
 
-        if (!habitExist) {
-            const success = addNewHabit({allHabits, setAllHabits, newHabit: habit});
-            if (success) {
-                setOpenHabitWindow(false);
+            if (!habitExist) {
+                try {
+                    setAllHabits(prev => [...prev, habit]);
+                    toast.success(`${habit?.isTask ? "Task" : "Habit"} added successfully!`);
+                    setOpenHabitWindow(false);
+                    setSelectedItems(null);
+                } catch (error) {
+                    console.error("Error adding habit:", error);
+                    toast.error("Something went wrong...");
+                }
+            } else {
+                toast.error(`${habit?.isTask ? "Task" : "Habit"} already exists`);
             }
         } else {
-            toast.error("Habit already exists");
+            const habitExist = allHabits.some(
+                (singleHabit) => singleHabit.name === habit.name && singleHabit._id !== habit._id
+            );
+
+            if (!habitExist) {
+                try {
+                    setAllHabits(prev => prev.map((singleHabit) =>
+                        singleHabit._id === habit._id ? {...habit} : singleHabit
+                    ));
+                    toast.success(`${habit?.isTask ? "Task" : "Habit"} updated successfully!`);
+                    setOpenHabitWindow(false);
+
+                    // Clear selected items after a short delay to ensure state updates
+                    setTimeout(() => {
+                        setSelectedItems(null);
+                    }, 100);
+                } catch (error) {
+                    console.error("Error updating habit:", error);
+                    toast.error("Something went wrong...");
+                }
+            } else {
+                toast.error(`A ${habit?.isTask ? "task" : "habit"} with this name already exists!`);
+            }
         }
     }
 
@@ -33,7 +78,7 @@ export default function SaveButton({ habit }) {
             onClick={checkNewHabitObject}
             className="w-full py-3 bg-primary text-white font-medium rounded-md hover:bg-primary transition-colors"
         >
-            {habit.isTask ? "Add a Task" : "Add a Habit"}
+            {buttonText}
         </button>
     );
 }

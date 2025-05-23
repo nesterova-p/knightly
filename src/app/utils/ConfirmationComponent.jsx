@@ -1,13 +1,32 @@
 import { useGlobalContextProvider } from "../contextApi";
+import { deleteHabit } from "./deleteHabit";
 
 export default function ConfirmationComponent() {
     const {
         openConfirmationWindowObject,
-        selectedItemsObject
+        selectedItemsObject,
+        allHabitObject
     } = useGlobalContextProvider();
 
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
-    const { setSelectedItems } = selectedItemsObject;
+    const { selectedItems, setSelectedItems } = selectedItemsObject;
+    const { allHabits, setAllHabits } = allHabitObject;
+
+    function isAreaType(item) {
+        return "name" in item && "icon" in item && !("frequency" in item);
+    }
+
+    function isHabitType(item) {
+        return "frequency" in item && "completedDays" in item;
+    }
+
+    function deleteOption() {
+        if (isHabitType(selectedItems)) {
+            deleteHabit(allHabits, setAllHabits, selectedItems);
+            setOpenConfirmationWindow(false);
+            setSelectedItems(null);
+        }
+    }
 
     return(
         <div
@@ -25,7 +44,7 @@ export default function ConfirmationComponent() {
                 {'Are you sure?'}
             </span>
             <span className={"text-center text-[13px] opacity-75"}>
-                Are you sure you want to delete this item?
+                Are you sure you want to delete this {selectedItems?.isTask ? "task" : "item"}?
                 <br/>
                 This action cannot be undone
             </span>
@@ -41,6 +60,7 @@ export default function ConfirmationComponent() {
                 </button>
                 <button
                     className={"text-[13px] w-full px-10 p-3 rounded-md text-white bg-primary"}
+                    onClick={deleteOption}
                 >
                     Delete
                 </button>

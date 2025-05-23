@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from "react";
 import {useGlobalContextProvider} from "../../../../contextApi";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faIcons} from "@fortawesome/free-solid-svg-icons";
+import {textToIcon} from "../IconWindow/IconData";
 
 export default function InputNameAndIconButton({ onUpdateHabitName, habitName, selectedIcon, setOpenIconWindow }) {
     const inputRef = useRef(null);
@@ -22,6 +23,10 @@ export default function InputNameAndIconButton({ onUpdateHabitName, habitName, s
         }
     }, [openHabitWindow]);
 
+    const iconObject = selectedIcon ?
+        (typeof selectedIcon === 'string' ? textToIcon(selectedIcon) : selectedIcon)
+        : faIcons;
+
     return (
         <div className="mb-6">
             <div className="text-sm text-gray-600 mb-2">Adventure Name</div>
@@ -38,7 +43,7 @@ export default function InputNameAndIconButton({ onUpdateHabitName, habitName, s
                     onClick={() => setOpenIconWindow(true)}
                 >
                     <FontAwesomeIcon
-                        icon={selectedIcon || faIcons}
+                        icon={iconObject}
                         width={16}
                         height={16}
                     />

@@ -8,18 +8,20 @@ export default function DropDown() {
         openDropDownObject,
         dropDownPositionsObject,
         openConfirmationWindowObject,
-        selectedItemsObject
+        selectedItemsObject,
+        habitWindowObject
     } = useGlobalContextProvider();
 
     const { openDropDown, setOpenDropDown } = openDropDownObject;
     const { dropDownPositions } = dropDownPositionsObject;
-    const {openConfirmationWindow ,setOpenConfirmationWindow } = openConfirmationWindowObject;
+    const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { setSelectedItems } = selectedItemsObject;
+    const { setOpenHabitWindow } = habitWindowObject;
     const ref = useRef(null);
 
     const dropDownMenuItems = [
         { name: "Edit", icon: faPencil },
-        { name: "Delete", icon: faTrash },
+        { name: "Remove", icon: faTrash },
     ];
     const [hover, setHover] = useState(false);
     const [indexHovered, setIndexHovered] = useState(0);
@@ -33,10 +35,9 @@ export default function DropDown() {
         function handleOutsideClick(event) {
             if (ref && !ref.current?.contains(event.target)) {
                 setOpenDropDown(false);
-                if(!openConfirmationWindow){
+                if(!openConfirmationWindow) {
                     setSelectedItems(null);
                 }
-
             }
         }
 
@@ -44,11 +45,13 @@ export default function DropDown() {
         return () => {
             document.removeEventListener("click", handleOutsideClick);
         };
-    }, [openDropDown, setOpenDropDown, setSelectedItems]);
+    }, [openDropDown, setOpenDropDown, setSelectedItems, openConfirmationWindow]);
 
-    function handleClickedOption(index) {
+    function handleClickOption(index) {
         switch (index) {
             case 0:
+                setOpenHabitWindow(true);
+                setOpenDropDown(false);
                 break;
             case 1:
                 setOpenConfirmationWindow(true);
@@ -78,7 +81,7 @@ export default function DropDown() {
                     key={index}
                     onMouseEnter={() => handleHoverChange(index, true)}
                     onMouseLeave={() => handleHoverChange(index, false)}
-                    onClick={() => handleClickedOption(index)}
+                    onClick={() => handleClickOption(index)}
                     className="flex gap-2 items-center rounded-md p-3 select-none cursor-pointer transition-all"
                 >
                     <FontAwesomeIcon

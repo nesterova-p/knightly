@@ -2,14 +2,15 @@ import {useGlobalContextProvider} from "../../../../contextApi";
 import React, {useCallback, useEffect, useState} from "react";
 import DailyOptions from "./DailyOptions";
 import WeeklyOption from "./WeeklyOption";
-import DateOption from "./DateOption"; // New component we'll create
+import DateOption from "./DateOption";
 
 export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFrequencyChange, initialFrequency, onDateChange }){
-    const { habitWindowObject } = useGlobalContextProvider();
+    const { habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
     const { openHabitWindow, habitItem } = habitWindowObject;
+    const { selectedItems } = selectedItemsObject;
 
     const [repeatOption, setRepeatOption] = useState([
-        {name: "None", isSelected: false},   // Added None option
+        {name: "None", isSelected: false},
         {name: "Daily", isSelected: true},
         {name: "Weekly", isSelected: false},
     ]);
@@ -55,17 +56,27 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     }, [selectedDate, handleDateChange]);
 
     useEffect(() => {
-        if (openHabitWindow) {
-            setAllDays(defaultDays);
-            setWeeks(1);
-            setSelectedDate(new Date());
-            setRepeatOption([
-                {name: "None", isSelected: false},
-                {name: "Daily", isSelected: true},
-                {name: "Weekly", isSelected: false},
-            ]);
+        if (selectedItems) {
+            const currentHabitSelected = selectedItems;
+            const selectedOptionOfHabitSelected = currentHabitSelected.frequency[0].type;
+
+            const copyRepeatOptions = repeatOption.map((singleOption) => {
+                if (singleOption.name === selectedOptionOfHabitSelected) {
+                    return { ...singleOption, isSelected: true };
+                }
+                return { ...singleOption, isSelected: false };
+            });
+
+            setRepeatOption(copyRepeatOptions);
+        } else {
+            const copyRepeatOptions = repeatOption.map((singleOption) => {
+                return { ...singleOption, isSelected: false };
+            });
+
+            copyRepeatOptions[1].isSelected = true;
+            setRepeatOption(copyRepeatOptions);
         }
-    }, [openHabitWindow]);
+    }, [openHabitWindow, selectedItems]);
 
     function changeRepeatOption(indexClicked) {
         const updatedRepeatOption = repeatOption.map((singleOption, index) => {

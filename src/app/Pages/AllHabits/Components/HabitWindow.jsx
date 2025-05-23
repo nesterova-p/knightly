@@ -11,6 +11,7 @@ import Repeat from "./NewHabitWindow/Repeat";
 import SaveButton from "./NewHabitWindow/SaveButton";
 import TimePicker from "./NewHabitWindow/TimePicker";
 import AreasNewHabit from "./NewHabitWindow/AreasNewHabit";
+import { v4 as uuidv4 } from 'uuid';
 
 const defaultHabitState = {
     _id: "",
@@ -40,9 +41,15 @@ const HeaderMemo = memo(Header);
 const InputNameAndIconButtonMemo = memo(InputNameAndIconButton);
 
 export default function HabitWindow() {
-    const { habitWindowObject, openTimePickerObject } = useGlobalContextProvider();
+    const {
+        habitWindowObject,
+        openTimePickerObject,
+        selectedItemsObject
+    } = useGlobalContextProvider();
+
     const { openHabitWindow, setOpenHabitWindow, habitItem, setHabitItem } = habitWindowObject;
     const { setOpenTimePickerWindow } = openTimePickerObject;
+    const { selectedItems } = selectedItemsObject;
 
     const [openIconWindow, setOpenIconWindow] = useState(false);
     const [selectedAreas, setSelectedAreas] = useState([]);
@@ -115,15 +122,57 @@ export default function HabitWindow() {
     }, [setHabitItem]);
 
     useEffect(() => {
-        if (!openHabitWindow) {
+        if (openHabitWindow) {
+            if (selectedItems) {
+                setHabitItem({...selectedItems});
+                setIconSelected(selectedItems.icon);
+            } else {
+                const newHabit = {
+                    _id: uuidv4(),
+                    name: "",
+                    icon: faIcons,
+                    frequency: [{ type: "Daily", days: [
+                            {id: 1, name: "Mo", isSelected: true},
+                            {id: 2, name: "Tu", isSelected: false},
+                            {id: 3, name: "We", isSelected: false},
+                            {id: 4, name: "Th", isSelected: false},
+                            {id: 5, name: "Fr", isSelected: false},
+                            {id: 6, name: "Sa", isSelected: false},
+                            {id: 7, name: "Su", isSelected: false},
+                        ], number: 1 }],
+                    hasReminder: false,
+                    reminderTime: "08:00 AM",
+                    areas: [],
+                    completedDays: [],
+                };
+                setHabitItem(newHabit);
+                setIconSelected(faIcons);
+            }
+        } else {
             setHabitItem({
-                ...defaultHabitState,
-                areas: []
+                _id: "",
+                name: "",
+                icon: faIcons,
+                frequency: [{ type: "Daily", days: [
+                        {id: 1, name: "Mo", isSelected: true},
+                        {id: 2, name: "Tu", isSelected: false},
+                        {id: 3, name: "We", isSelected: false},
+                        {id: 4, name: "Th", isSelected: false},
+                        {id: 5, name: "Fr", isSelected: false},
+                        {id: 6, name: "Sa", isSelected: false},
+                        {id: 7, name: "Su", isSelected: false},
+                    ], number: 1 }],
+                hasReminder: false,
+                reminderTime: "08:00 AM",
+                areas: [],
+                completedDays: [],
             });
             setOpenTimePickerWindow(false);
             setSelectedAreas([]);
         }
-    }, [openHabitWindow, setOpenTimePickerWindow, setHabitItem]);
+    }, [openHabitWindow, selectedItems]);
+
+    console.log(habitItem);
 
     return (
         <>
@@ -138,20 +187,22 @@ export default function HabitWindow() {
                 <div className="p-6">
                     <HeaderMemo />
                     <InputNameAndIconButtonMemo
+                        key={`input-${habitItem?._id || 'new'}-${openHabitWindow}`}
                         onUpdateHabitName={onUpdateHabitName}
-                        habitName={habitItem.name}
-                        selectedIcon={habitItem.icon}
+                        habitName={habitItem?.name || ""}
+                        selectedIcon={habitItem?.icon || faIcons}
                         setOpenIconWindow={setOpenIconWindow}
                     />
                     <Repeat
+                        key={`repeat-${habitItem?._id || 'new'}-${openHabitWindow}`}
                         onChangeOption={changeRepeatOption}
-                        initialDays={habitItem.frequency[0].days}
+                        initialDays={habitItem?.frequency?.[0]?.days || []}
                         onDaysChange={updateSelectedDays}
                         onFrequencyChange={updateWeeklyFrequency}
-                        initialFrequency={habitItem.frequency[0].number}
+                        initialFrequency={habitItem?.frequency?.[0]?.number || 1}
                         onDateChange={updateDueDate}
                     />
-                    <Reminder />
+                    <Reminder key={`reminder-${habitItem?._id || 'new'}-${openHabitWindow}`} />
                     <AreasNewHabit onChange={getSelectedAreaItems}/>
                     <SaveButton habit={habitItem} />
                 </div>

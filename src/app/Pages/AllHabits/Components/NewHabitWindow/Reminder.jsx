@@ -1,31 +1,33 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {useGlobalContextProvider} from "../../../../contextApi";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChevronDown} from "@fortawesome/free-solid-svg-icons";
 import ToggleSwitch from "./ToggleSwitch";
 
 export default function Reminder() {
-    const { openTimePickerObject, habitWindowObject } = useGlobalContextProvider();
+    const { openTimePickerObject, habitWindowObject, selectedItemsObject } = useGlobalContextProvider();
     const { openTimePickerWindow, setOpenTimePickerWindow } = openTimePickerObject;
-    const { habitItem, setHabitItem } = habitWindowObject;
+    const { habitItem, setHabitItem, openHabitWindow } = habitWindowObject;
+    const { selectedItems } = selectedItemsObject;
 
-    const isOn = habitItem?.hasReminder || false;
-
-    const defaultTime = "08:00 AM";
+    const [isOn, setIsOn] = useState(false);
 
     function updateToggle() {
-        const newIsOn = !isOn;
-
-        setHabitItem(prev => ({
-            ...prev,
-            hasReminder: newIsOn,
-            reminderTime: newIsOn ? (prev.reminderTime || defaultTime) : defaultTime
-        }));
+        const copyHabitItem = { ...habitItem };
+        copyHabitItem.hasReminder = !isOn;
+        setHabitItem(copyHabitItem);
+        setIsOn(!isOn);
     }
 
     function openTimePicker() {
         setOpenTimePickerWindow(true);
     }
+
+    useEffect(() => {
+        if (habitItem) {
+            setIsOn(habitItem.hasReminder || false);
+        }
+    }, [habitItem]);
 
     return (
         <div className="flex flex-col gap-2 mb-6">
@@ -41,7 +43,7 @@ export default function Reminder() {
                         className="flex gap-2 items-center justify-center cursor-pointer select-none"
                         onClick={openTimePicker}
                     >
-                        <span>{habitItem?.reminderTime || defaultTime}</span>
+                        <span>{habitItem?.reminderTime || "08:00 AM"}</span>
                         <FontAwesomeIcon height={12} width={12} icon={faChevronDown} />
                     </div>
                 </div>
