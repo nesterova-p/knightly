@@ -16,7 +16,7 @@ export default function DropDown() {
     const { dropDownPositions } = dropDownPositionsObject;
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { setSelectedItems } = selectedItemsObject;
-    const { setOpenHabitWindow } = habitWindowObject;
+    const { setOpenHabitWindow, openHabitWindow } = habitWindowObject; // Add openHabitWindow here
     const ref = useRef(null);
 
     const dropDownMenuItems = [
@@ -35,7 +35,7 @@ export default function DropDown() {
         function handleOutsideClick(event) {
             if (ref && !ref.current?.contains(event.target)) {
                 setOpenDropDown(false);
-                if(!openConfirmationWindow) {
+                if (!openConfirmationWindow && !openHabitWindow) {
                     setSelectedItems(null);
                 }
             }
@@ -45,7 +45,7 @@ export default function DropDown() {
         return () => {
             document.removeEventListener("click", handleOutsideClick);
         };
-    }, [openDropDown, setOpenDropDown, setSelectedItems, openConfirmationWindow]);
+    }, [openDropDown, setOpenDropDown, setSelectedItems, openConfirmationWindow, openHabitWindow]); // Add openHabitWindow to dependencies
 
     function handleClickOption(index) {
         switch (index) {

@@ -56,27 +56,39 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     }, [selectedDate, handleDateChange]);
 
     useEffect(() => {
-        if (selectedItems) {
-            const currentHabitSelected = selectedItems;
-            const selectedOptionOfHabitSelected = currentHabitSelected.frequency[0].type;
+        if (openHabitWindow) {
+            if (selectedItems) {
+                const currentHabitSelected = selectedItems;
+                const selectedOptionOfHabitSelected = currentHabitSelected.frequency[0].type;
 
-            const copyRepeatOptions = repeatOption.map((singleOption) => {
-                if (singleOption.name === selectedOptionOfHabitSelected) {
-                    return { ...singleOption, isSelected: true };
+                const copyRepeatOptions = repeatOption.map((singleOption) => {
+                    if (singleOption.name === selectedOptionOfHabitSelected) {
+                        return { ...singleOption, isSelected: true };
+                    }
+                    return { ...singleOption, isSelected: false };
+                });
+
+                setRepeatOption(copyRepeatOptions);
+
+                if (currentHabitSelected.frequency[0].days) {
+                    setAllDays(currentHabitSelected.frequency[0].days);
                 }
-                return { ...singleOption, isSelected: false };
-            });
 
-            setRepeatOption(copyRepeatOptions);
-        } else {
-            const copyRepeatOptions = repeatOption.map((singleOption) => {
-                return { ...singleOption, isSelected: false };
-            });
+                if (currentHabitSelected.frequency[0].number) {
+                    setWeeks(currentHabitSelected.frequency[0].number);
+                }
+            } else {
+                const copyRepeatOptions = repeatOption.map((singleOption) => {
+                    return { ...singleOption, isSelected: false };
+                });
 
-            copyRepeatOptions[1].isSelected = true;
-            setRepeatOption(copyRepeatOptions);
+                copyRepeatOptions[1].isSelected = true;
+                setRepeatOption(copyRepeatOptions);
+                setAllDays(defaultDays);
+                setWeeks(1);
+            }
         }
-    }, [openHabitWindow, selectedItems]);
+    }, [openHabitWindow]);
 
     function changeRepeatOption(indexClicked) {
         const updatedRepeatOption = repeatOption.map((singleOption, index) => {
