@@ -25,6 +25,16 @@ export default function HabitsContainerMain() {
         console.log("Current day index:", dayId, "Selected area:", selectedAreaString);
 
         const filteredHabitsByFrequency = allHabits.filter((singleHabit) => {
+            if (singleHabit.isTask || (singleHabit.frequency && singleHabit.frequency[0]?.type === "None")) {
+                if (singleHabit.dueDate) {
+                    const taskDueDate = new Date(singleHabit.dueDate);
+                    const taskDateString = taskDueDate.toISOString().split('T')[0];
+                    const currentDateString = currentDate.toISOString().split('T')[0];
+                    return taskDateString === currentDateString;
+                }
+                return false;
+            }
+
             if (!singleHabit.frequency || !singleHabit.frequency[0] || !singleHabit.frequency[0].days) {
                 return false;
             }
@@ -68,7 +78,6 @@ export default function HabitsContainerMain() {
                     {areAllHabitsCompleted ? (
                         <SuccessPlaceHolder/>
                     ) : (
-                        // remaining habits to complete
                         nonCompletedHabits.map((singleHabit, singleHabitIndex) => (
                             <div key={singleHabitIndex}>
                                 <SingleHabitCard singleHabit={singleHabit} />

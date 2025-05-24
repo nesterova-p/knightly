@@ -16,6 +16,12 @@ export default function HabitsCompleted() {
         ));
     });
 
+    const completedHabits = allFilteredHabits.filter((singleHabit) => {
+        return singleHabit.completedDays && singleHabit.completedDays.some(
+            (day) => day.date === selectedCurrentDay
+        );
+    });
+
     return (
         <div className="bg-white mt-7 p-8 py-10 rounded-md">
             <span className="font-bold text-lg mb-2">
@@ -30,13 +36,9 @@ export default function HabitsCompleted() {
                     )}
                 </div>
 
-                {allFilteredHabits.map((singleHabit, index) => (
+                {completedHabits.map((singleHabit, index) => (
                     <div key={index}>
-                        {singleHabit.completedDays && singleHabit.completedDays.some(
-                            (day) => day.date === selectedCurrentDay
-                        ) && (
-                            <SingleHabitCard singleHabit={singleHabit} />
-                        )}
+                        <SingleHabitCard singleHabit={singleHabit} />
                     </div>
                 ))}
             </div>

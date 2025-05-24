@@ -11,23 +11,26 @@ export function addNewHabit({
         return false;
     }
 
-    const newHabitWithId = {
-        ...newHabit,
-        _id: newHabit._id || uuidv4(),
-        createdAt: new Date().toISOString(),
-    };
+    try {
+        const newHabitWithId = {
+            ...newHabit,
+            _id: newHabit._id || uuidv4(),
+            createdAt: new Date().toISOString(),
+            completedDays: newHabit.completedDays || []
+        };
 
-    if (newHabit.isTask) {
-        toast.success("Task created successfully!");
-        console.log("Saving task:", newHabitWithId);
-        // database for tasks
-    } else {
-        toast.success("Habit created successfully!");
-        console.log("Saving habit:", newHabitWithId);
-        // database for habits
+        setAllHabits([...allHabits, newHabitWithId]);
+
+        if (newHabit.isTask) {
+            toast.success("Task created successfully!");
+        } else {
+            toast.success("Habit created successfully!");
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Error adding habit:", error);
+        toast.error("Something went wrong while creating the habit");
+        return false;
     }
-
-    setAllHabits([...allHabits, newHabitWithId]);
-
-    return true;
 }
