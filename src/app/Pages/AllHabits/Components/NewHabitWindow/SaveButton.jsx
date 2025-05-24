@@ -1,6 +1,7 @@
 import { useGlobalContextProvider } from "../../../../contextApi";
 import React, { useState, useEffect } from "react";
 import { addNewHabit } from "../../../../utils/addNewHabit.jsx";
+import { updateHabitInServer } from "../../../../utils/editHabitInServer.jsx";
 import toast from "react-hot-toast";
 
 export default function SaveButton({ habit }) {
@@ -55,15 +56,19 @@ export default function SaveButton({ habit }) {
 
             if (!habitExist) {
                 try {
-                    setAllHabits(prev => prev.map((singleHabit) =>
-                        singleHabit._id === selectedItems._id ? {...habit, _id: selectedItems._id} : singleHabit
-                    ));
-                    toast.success(`${habit?.isTask ? "Task" : "Habit"} updated successfully!`);
-                    setOpenHabitWindow(false);
+                    const success = await updateHabitInServer({
+                        allHabits,
+                        setAllHabits,
+                        selectedItems,
+                        habit
+                    });
 
-                    setTimeout(() => {
-                        setSelectedItems(null);
-                    }, 100);
+                    if (success) {
+                        setOpenHabitWindow(false);
+                        setTimeout(() => {
+                            setSelectedItems(null);
+                        }, 100);
+                    }
                 } catch (error) {
                     console.error("Error updating habit:", error);
                     toast.error("Something went wrong...");

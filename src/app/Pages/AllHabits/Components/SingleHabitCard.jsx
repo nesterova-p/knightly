@@ -6,6 +6,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {iconToText, textToIcon} from "../../AllHabits/Components/IconWindow/IconData";
 import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { useGlobalContextProvider } from "../../../contextApi";
+import { toggleHabitCompletion } from "../../../utils/updateCompletedDays";
 import { v4 as uuidv4 } from 'uuid';
 
 export function SingleHabitCard({ singleHabit }) {
@@ -33,58 +34,40 @@ export function SingleHabitCard({ singleHabit }) {
         )
     );
 
-    function handleCheckboxChange(event) {
+    async function handleCheckboxChange(event) {
         const checked = event.target.checked;
 
-        if (checked) {
-            checkHabit();
-        } else {
-            uncheckHabit();
+        const success = await toggleHabitCompletion({
+            habit: singleHabit,
+            selectedCurrentDay,
+            isChecked: checked,
+            allHabits,
+            setAllHabits
+        });
+
+        if (!success) {
+            event.target.checked = !checked;
         }
     }
 
-    function checkHabit() {
-        const completedDay = {
-            _id: uuidv4(),
-            date: selectedCurrentDay,
-        };
-
-        const updatedHabits = allHabits.map((habit) => {
-            if (habit._id === singleHabit._id) {
-                const currentCompletedDays = habit.completedDays || [];
-                const isAlreadyCompleted = currentCompletedDays.some(
-                    (day) => day.date === selectedCurrentDay
-                );
-
-                if (!isAlreadyCompleted) {
-                    return {
-                        ...habit,
-                        completedDays: [...currentCompletedDays, completedDay],
-                    };
-                }
-                return habit;
-            }
-            return habit;
+    async function checkHabit() {
+        await toggleHabitCompletion({
+            habit: singleHabit,
+            selectedCurrentDay,
+            isChecked: true,
+            allHabits,
+            setAllHabits
         });
-
-        setAllHabits(updatedHabits);
     }
 
-    function uncheckHabit() {
-        const updatedHabits = allHabits.map((habit) => {
-            if (habit._id === singleHabit._id) {
-                const updatedCompletedDays = habit.completedDays ?
-                    habit.completedDays.filter((day) => day.date !== selectedCurrentDay) : [];
-
-                return {
-                    ...habit,
-                    completedDays: updatedCompletedDays,
-                };
-            }
-            return habit;
+    async function uncheckHabit() {
+        await toggleHabitCompletion({
+            habit: singleHabit,
+            selectedCurrentDay,
+            isChecked: false,
+            allHabits,
+            setAllHabits
         });
-
-        setAllHabits(updatedHabits);
     }
 
     function handleClickThreeDots(event) {

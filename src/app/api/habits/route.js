@@ -90,3 +90,100 @@ export async function GET(req) {
         );
     }
 }
+
+export async function DELETE(req) {
+    try {
+        const { habitId } = await req.json();
+
+        await connectToDB();
+
+        const habitToDelete = await HabitsCollection.findOneAndDelete({
+            _id: habitId,
+        });
+
+        if (!habitToDelete) {
+            return NextResponse.json({ message: "Habit not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ message: "Habit deleted successfully" });
+    } catch (error) {
+        return NextResponse.json({ message: error }, { status: 500 });
+    }
+}
+
+export async function PUT(request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const habitId = searchParams.get("habitId");
+
+        if (!habitId) {
+            return NextResponse.json(
+                { message: "Habit ID is required" },
+                { status: 400 }
+            );
+        }
+
+        const {
+            name,
+            icon,
+            frequency,
+            notificationTime,
+            isNotificationOn,
+            areas,
+            completedDays,
+            isTask,
+            dueDate,
+            hasReminder,
+            reminderTime,
+            clerkUserId
+        } = await request.json();
+
+        if (!name) {
+            return NextResponse.json(
+                { message: "Habit name is required" },
+                { status: 400 }
+            );
+        }
+
+        await connectToDB();
+
+        const updatedHabit = await HabitsCollection.findOneAndUpdate(
+            { _id: habitId, clerkUserId },
+            {
+                $set: {
+                    name,
+                    icon,
+                    frequency,
+                    notificationTime: notificationTime || reminderTime,
+                    isNotificationOn: isNotificationOn || hasReminder,
+                    areas: areas || [],
+                    completedDays: completedDays || [],
+                    isTask: isTask || false,
+                    dueDate: dueDate ? new Date(dueDate) : new Date(),
+                    hasReminder: hasReminder || false,
+                    reminderTime: reminderTime || ""
+                }
+            },
+            { returnDocument: "after" }
+        );
+
+        if (!updatedHabit) {
+            return NextResponse.json(
+                { message: "Habit not found or unauthorized" },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({
+            message: "Habit has been updated successfully",
+            habit: updatedHabit.value || updatedHabit
+        });
+
+    } catch (error) {
+        console.error("Error updating habit:", error);
+        return NextResponse.json(
+            { message: "An error occurred while updating the habit" },
+            { status: 500 }
+        );
+    }
+}
