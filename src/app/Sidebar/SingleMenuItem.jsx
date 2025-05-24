@@ -7,19 +7,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function SingleMenuItem({ menuItemProp }) {
     const {
         menuItemsObject: { menuItems, setMenuItems },
+        openSideBarObject: { setOpenSideBar }
     } = useGlobalContextProvider();
     const selectedClass = menuItemProp.isSelected
         ? "bg-primary text-white"
         : "hover:text-primary";
 
     function handleClickedItem(){
-        const copyMenuItems =menuItems.map((item) => {
+        const copyMenuItems = menuItems.map((item) => {
             if(item.name === menuItemProp.name){
                 return {...item, isSelected: true};
             }
             return {...item, isSelected: false};
         });
         setMenuItems(copyMenuItems);
+
+        setOpenSideBar(false);
     }
 
     return (
