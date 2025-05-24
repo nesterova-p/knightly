@@ -1,10 +1,10 @@
-import {NextResponse} from "next/server";
+import { NextResponse } from "next/server";
 import connectToDB from "../../dataBase/connectToDB";
 import HabitsCollection from "../../models/HabitSchema";
 
-export async function POST(req){
-    try{
-        const{
+export async function POST(req) {
+    try {
+        const {
             name,
             icon,
             isTask,
@@ -31,7 +31,7 @@ export async function POST(req){
             icon: icon || "faIcons",
             isTask: isTask || false,
             hasReminder: hasReminder || false,
-            reminderTime: reminderTime || "08:00 AM",
+            reminderTime: reminderTime || "",
             dueDate: dueDate ? new Date(dueDate) : new Date(),
             frequency: frequency || [{
                 type: "Daily",
@@ -51,14 +51,41 @@ export async function POST(req){
             clerkUserId
         });
 
-        const saveHabit = await habit.save();
+        const savedHabit = await habit.save();
 
-        return NextResponse.json({habit: saveHabit});
+        return NextResponse.json({ habit: savedHabit }, { status: 201 });
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         return NextResponse.json(
-            { error: "Failed to create habit" },
+            { err: "Failed to create habit" },
+            { status: 500 }
+        );
+    }
+}
+
+export async function GET(req) {
+    try {
+        const { searchParams } = new URL(req.url);
+        const clerkUserId = searchParams.get('clerkUserId');
+
+        if (!clerkUserId) {
+            return NextResponse.json(
+                { error: "clerkUserId is required" },
+                { status: 400 }
+            );
+        }
+
+        await connectToDB();
+
+        const habits = await HabitsCollection.find({ clerkUserId }).sort({ createdAt: -1 });
+
+        return NextResponse.json({ habits }, { status: 200 });
+
+    } catch (error) {
+        console.log(error);
+        return NextResponse.json(
+            { error: "Failed to fetch habits" },
             { status: 500 }
         );
     }

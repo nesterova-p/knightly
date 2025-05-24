@@ -145,42 +145,43 @@ export const GlobalContextProvider = ({ children }) => {
     const { isLoaded, isSignedIn, user } = useUser();
 
     useEffect(() => {
-        function fetchData() {
-            const allHabitsData = [{
-                _id: uuidv4(),
-                name: "Test Habit",
-                icon: iconToText(faCode),
-                clerkUserId: user?.id || "",
-                frequency: [{
-                    type: "Daily",
-                    days: [
-                        {id: 1, name: "Mo", isSelected: true},
-                        {id: 2, name: "Tu", isSelected: false},
-                        {id: 3, name: "We", isSelected: false},
-                        {id: 4, name: "Th", isSelected: false},
-                        {id: 5, name: "Fr", isSelected: false},
-                        {id: 6, name: "Sa", isSelected: false},
-                        {id: 7, name: "Su", isSelected: false},
-                    ],
-                    number: 1
-                }],
-                reminderTime: "",
-                hasReminder: false,
-                isTask: false,
-                dueDate: new Date(),
-                areas: [
-                    { _id: uuidv4(), icon: textToIcon("faCode"), name: "Code" }
-                ],
-                completedDays: [
-                    { _id: uuidv4(), date: "2024-06-03" },
-                    { _id: uuidv4(), date: "2024-06-07" }
-                ]
-            }];
+        const fetchAllHabits = async () => {
+            try {
+                const response = await fetch(`/api/habits?clerkUserId=${user?.id}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch habits");
+                }
+                const data = await response.json();
 
-            setTimeout(() => {
-                setAllHabits(allHabitsData);
-            }, 1000);
-        }
+                const updatedHabits = data.habits.map((habit) => {
+                    if (typeof habit.icon === "string") {
+                        return {
+                            ...habit,
+                            icon: textToIcon(habit.icon),
+                        };
+                    }
+                    return habit;
+                });
+
+                const updatedHabitsWithAreas = updatedHabits.map((habit) => {
+                    const updatedAreas = habit.areas.map((area) => {
+                        if (typeof area.icon === "string") {
+                            return {
+                                ...area,
+                                icon: textToIcon(area.icon),
+                            };
+                        }
+                        return area;
+                    });
+                    return { ...habit, areas: updatedAreas };
+                });
+
+                console.log(updatedHabitsWithAreas);
+                setAllHabits(updatedHabitsWithAreas);
+            } catch (error) {
+                console.error("Error fetching habits:", error);
+            }
+        };
 
         function fetchAllAreas() {
             const allAreasData = [
@@ -193,7 +194,7 @@ export const GlobalContextProvider = ({ children }) => {
         }
 
         if (isLoaded && isSignedIn) {
-            fetchData();
+            fetchAllHabits();
             fetchAllAreas();
         }
     }, [isLoaded, isSignedIn, user]);
