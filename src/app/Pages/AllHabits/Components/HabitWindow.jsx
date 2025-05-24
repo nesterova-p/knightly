@@ -12,30 +12,7 @@ import SaveButton from "./NewHabitWindow/SaveButton";
 import TimePicker from "./NewHabitWindow/TimePicker";
 import AreasNewHabit from "./NewHabitWindow/AreasNewHabit";
 import { v4 as uuidv4 } from 'uuid';
-
-const defaultHabitState = {
-    _id: "",
-    name: "",
-    icon: faIcons,
-    isTask: false,
-    hasReminder: false,
-    reminderTime: "08:00 AM",
-    dueDate: new Date(),
-    frequency: [{
-        type: "Daily",
-        days: [
-            {id: 1, name: "Mo", isSelected: true},
-            {id: 2, name: "Tu", isSelected: false},
-            {id: 3, name: "We", isSelected: false},
-            {id: 4, name: "Th", isSelected: false},
-            {id: 5, name: "Fr", isSelected: false},
-            {id: 6, name: "Sa", isSelected: false},
-            {id: 7, name: "Su", isSelected: false},
-        ],
-        number: 1
-    }],
-    areas: []
-};
+import { useUser } from "@clerk/nextjs";
 
 const HeaderMemo = memo(Header);
 const InputNameAndIconButtonMemo = memo(InputNameAndIconButton);
@@ -50,6 +27,7 @@ export default function HabitWindow() {
     const { openHabitWindow, setOpenHabitWindow, habitItem, setHabitItem } = habitWindowObject;
     const { setOpenTimePickerWindow } = openTimePickerObject;
     const { selectedItems, setSelectedItems } = selectedItemsObject;
+    const { user } = useUser();
 
     const [openIconWindow, setOpenIconWindow] = useState(false);
     const [selectedAreas, setSelectedAreas] = useState([]);
@@ -129,6 +107,7 @@ export default function HabitWindow() {
                     _id: selectedItems._id,
                     name: selectedItems.name || "",
                     icon: selectedItems.icon || faIcons,
+                    clerkUserId: user?.id || "",
                     frequency: selectedItems.frequency || [{
                         type: "Daily",
                         days: [
@@ -143,7 +122,7 @@ export default function HabitWindow() {
                         number: 1
                     }],
                     hasReminder: selectedItems.hasReminder || false,
-                    reminderTime: selectedItems.reminderTime || "08:00 AM",
+                    reminderTime: selectedItems.reminderTime || "",
                     areas: selectedItems.areas || [],
                     completedDays: selectedItems.completedDays || [],
                     isTask: selectedItems.isTask || false,
@@ -154,9 +133,10 @@ export default function HabitWindow() {
                 setSelectedAreas(editHabit.areas);
             } else {
                 const newHabit = {
-                    _id: uuidv4(),
+                    _id: "",
                     name: "",
                     icon: faIcons,
+                    clerkUserId: user?.id || "",
                     frequency: [{
                         type: "Daily",
                         days: [
@@ -171,7 +151,7 @@ export default function HabitWindow() {
                         number: 1
                     }],
                     hasReminder: false,
-                    reminderTime: "08:00 AM",
+                    reminderTime: "",
                     areas: [],
                     completedDays: [],
                     isTask: false,
@@ -182,15 +162,13 @@ export default function HabitWindow() {
                 setSelectedAreas([]);
             }
         }
-    }, [openHabitWindow, selectedItems]);
+    }, [openHabitWindow, selectedItems, user]);
 
     useEffect(() => {
         if (!openHabitWindow) {
             setOpenTimePickerWindow(false);
         }
     }, [openHabitWindow, setOpenTimePickerWindow]);
-
-    console.log(habitItem);
 
     return (
         <>

@@ -1,7 +1,6 @@
 import { useGlobalContextProvider } from "../../../../contextApi";
 import React, { useState, useEffect } from "react";
 import { addNewHabit } from "../../../../utils/addNewHabit.jsx";
-import { editHabit } from "../../../../utils/editHabit.jsx";
 import toast from "react-hot-toast";
 
 export default function SaveButton({ habit }) {
@@ -24,7 +23,7 @@ export default function SaveButton({ habit }) {
         }
     }, [openHabitWindow, selectedItems, habit?.isTask]);
 
-    function checkNewHabitObject() {
+    async function checkNewHabitObject() {
         if (habit.name.trim() === "") {
             return toast.error("The habit name field is still empty!");
         }
@@ -35,15 +34,16 @@ export default function SaveButton({ habit }) {
             );
 
             if (!habitExist) {
-                const success = addNewHabit({
-                    allHabits,
-                    setAllHabits,
-                    newHabit: habit
-                });
-
-                if (success) {
+                try {
+                    await addNewHabit({
+                        allHabits,
+                        setAllHabits,
+                        habit
+                    });
                     setOpenHabitWindow(false);
                     setSelectedItems(null);
+                } catch (error) {
+                    console.error("Error adding habit:", error);
                 }
             } else {
                 toast.error(`${habit?.isTask ? "Task" : "Habit"} already exists`);
@@ -54,18 +54,19 @@ export default function SaveButton({ habit }) {
             );
 
             if (!habitExist) {
-                const success = editHabit({
-                    allHabits,
-                    setAllHabits,
-                    selectedItems,
-                    habit
-                });
-
-                if (success) {
+                try {
+                    setAllHabits(prev => prev.map((singleHabit) =>
+                        singleHabit._id === selectedItems._id ? {...habit, _id: selectedItems._id} : singleHabit
+                    ));
+                    toast.success(`${habit?.isTask ? "Task" : "Habit"} updated successfully!`);
                     setOpenHabitWindow(false);
+
                     setTimeout(() => {
                         setSelectedItems(null);
                     }, 100);
+                } catch (error) {
+                    console.error("Error updating habit:", error);
+                    toast.error("Something went wrong...");
                 }
             } else {
                 toast.error(`A ${habit?.isTask ? "task" : "habit"} with this name already exists!`);

@@ -1,36 +1,43 @@
-import { v4 as uuidv4 } from "uuid";
+import { iconToText } from "../Pages/AllHabits/Components/IconWindow/IconData";
 import toast from "react-hot-toast";
 
-export function addNewHabit({
-                                allHabits,
-                                setAllHabits,
-                                newHabit
-                            }) {
-    if (!newHabit.name.trim()) {
-        toast.error("The habit name field is still empty!");
-        return false;
-    }
+export async function addNewHabit({
+                                      allHabits,
+                                      setAllHabits,
+                                      habit
+                                  }) {
+    const { icon, areas } = habit;
+
+    const habitIconText = iconToText(icon);
+
+    const areasCopy = areas.map((area) => ({
+        ...area,
+        icon: iconToText(area.icon),
+    }));
+
+    const updatedHabit = { ...habit, icon: habitIconText, areas: areasCopy };
 
     try {
-        const newHabitWithId = {
-            ...newHabit,
-            _id: newHabit._id || uuidv4(),
-            createdAt: new Date().toISOString(),
-            completedDays: newHabit.completedDays || []
-        };
+        const response = await fetch("/api/habits", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(updatedHabit),
+        });
 
-        setAllHabits([...allHabits, newHabitWithId]);
-
-        if (newHabit.isTask) {
-            toast.success("Task created successfully!");
-        } else {
-            toast.success("Habit created successfully!");
+        if (!response.ok) {
+            throw new Error("Failed to add habit");
         }
 
-        return true;
+        const data = await response.json();
+        const { _id } = data.habit;
+
+        const updatedIdOfHabit = { ...habit, id: _id };
+
+        setAllHabits([...allHabits, updatedIdOfHabit]);
+        toast.success("Habit added successfully!");
     } catch (error) {
-        console.error("Error adding habit:", error);
-        toast.error("Something went wrong while creating the habit");
-        return false;
+        toast.error("Something went wrong...");
     }
 }

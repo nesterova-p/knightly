@@ -13,15 +13,13 @@ import {faIcons} from "@fortawesome/free-solid-svg-icons";
 import {iconToText, textToIcon} from "../app/Pages/AllHabits/Components/IconWindow/IconData";
 import {getDateString} from "../app/utils/dateFormating";
 import { v4 as uuidv4 } from 'uuid';
+import { useUser } from "@clerk/nextjs";
 
 const defaultHabitState = {
     _id: "",
     name: "",
     icon: faIcons,
-    isTask: false,
-    hasReminder: false,
-    reminderTime: "08:00 AM",
-    dueDate: new Date(),
+    clerkUserId: "",
     frequency: [{
         type: "Daily",
         days: [
@@ -35,6 +33,11 @@ const defaultHabitState = {
         ],
         number: 1
     }],
+    reminderTime: "",
+    hasReminder: false,
+    isTask: false,
+    dueDate: new Date(),
+    areas: [],
     completedDays: []
 };
 
@@ -118,12 +121,7 @@ export const GlobalContextProvider = ({ children }) => {
         { name: "Areas", isSelected: false, icon: faLayerGroup },
     ]);
 
-    const [allAreas, setAllAreas] = useState([
-        {id: 1, icon: faUser, name: "All"},
-        {id: 2, icon: faGraduationCap, name: "Study"},
-        {id: 3, icon: faCode, name: "Code"},
-    ]);
-
+    const [allAreas, setAllAreas] = useState([]);
     const [openSideBar, setOpenSideBar] = useState(false);
     const [isDarkMode, setDarkMode] = useState(false);
     const [openHabitWindow, setOpenHabitWindow] = useState(false);
@@ -144,16 +142,15 @@ export const GlobalContextProvider = ({ children }) => {
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
     const [selectedItems, setSelectedItems] = useState(null);
 
+    const { isLoaded, isSignedIn, user } = useUser();
+
     useEffect(() => {
         function fetchData() {
             const allHabitsData = [{
                 _id: uuidv4(),
                 name: "Test Habit",
                 icon: iconToText(faCode),
-                isTask: false,
-                hasReminder: false,
-                reminderTime: "08:00 AM",
-                dueDate: new Date(),
+                clerkUserId: user?.id || "",
                 frequency: [{
                     type: "Daily",
                     days: [
@@ -167,10 +164,17 @@ export const GlobalContextProvider = ({ children }) => {
                     ],
                     number: 1
                 }],
+                reminderTime: "",
+                hasReminder: false,
+                isTask: false,
+                dueDate: new Date(),
                 areas: [
-                    { _id: uuidv4(), icon: faCode, name: "Code" }
+                    { _id: uuidv4(), icon: textToIcon("faCode"), name: "Code" }
                 ],
-                completedDays: []
+                completedDays: [
+                    { _id: uuidv4(), date: "2024-06-03" },
+                    { _id: uuidv4(), date: "2024-06-07" }
+                ]
             }];
 
             setTimeout(() => {
@@ -178,8 +182,21 @@ export const GlobalContextProvider = ({ children }) => {
             }, 1000);
         }
 
-        fetchData();
-    }, []);
+        function fetchAllAreas() {
+            const allAreasData = [
+                { _id: uuidv4(), icon: textToIcon("faGlobe"), name: "All" },
+                { _id: uuidv4(), icon: textToIcon("faBook"), name: "Study" },
+                { _id: uuidv4(), icon: textToIcon("faLaptopCode"), name: "Code" }
+            ];
+
+            setAllAreas(allAreasData);
+        }
+
+        if (isLoaded && isSignedIn) {
+            fetchData();
+            fetchAllAreas();
+        }
+    }, [isLoaded, isSignedIn, user]);
 
     return (
         <GlobalContext.Provider value={{
