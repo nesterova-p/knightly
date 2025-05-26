@@ -16,13 +16,13 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     ]);
 
     const defaultDays = [
-        {id: 1, name: "M", isSelected: true},
-        {id: 2, name: "T", isSelected: false},
-        {id: 3, name: "W", isSelected: false},
-        {id: 4, name: "T", isSelected: false},
-        {id: 5, name: "F", isSelected: false},
-        {id: 6, name: "S", isSelected: false},
-        {id: 7, name: "S", isSelected: false},
+        {id: 1, name: "Mo", isSelected: true},
+        {id: 2, name: "Tu", isSelected: false},
+        {id: 3, name: "We", isSelected: false},
+        {id: 4, name: "Th", isSelected: false},
+        {id: 5, name: "Fr", isSelected: false},
+        {id: 6, name: "Sa", isSelected: false},
+        {id: 7, name: "Su", isSelected: false},
     ];
 
     const [allDays, setAllDays] = useState(initialDays || defaultDays);
