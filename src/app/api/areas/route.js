@@ -59,7 +59,19 @@ export async function GET(req) {
 
         await connectToDB();
 
-        const areas = await AreasCollection.find({ clerkUserId }).sort({ createdAt: 1 });
+        let areas = await AreasCollection.find({ clerkUserId }).sort({ createdAt: 1 });
+
+        // If user has no areas
+        if (areas.length === 0) {
+            const defaultArea = new AreasCollection({
+                name: "Adventures",
+                icon: "faPlaneDeparture",
+                clerkUserId
+            });
+
+            const savedArea = await defaultArea.save();
+            areas = [savedArea];
+        }
 
         return NextResponse.json({ areas }, { status: 200 });
 
