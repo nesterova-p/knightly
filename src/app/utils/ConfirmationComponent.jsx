@@ -1,32 +1,54 @@
 import { useGlobalContextProvider } from "../contextApi";
 import { deleteHabit } from "./deleteHabit";
+import { deleteArea } from "./areaUtils";
 
 export default function ConfirmationComponent() {
     const {
         openConfirmationWindowObject,
         selectedItemsObject,
-        allHabitObject
+        allHabitObject,
+        allAreasObject
     } = useGlobalContextProvider();
 
     const { openConfirmationWindow, setOpenConfirmationWindow } = openConfirmationWindowObject;
     const { selectedItems, setSelectedItems } = selectedItemsObject;
     const { allHabits, setAllHabits } = allHabitObject;
+    const { allAreas, setAllAreas } = allAreasObject;
 
     function isAreaType(item) {
-        return "name" in item && "icon" in item && !("frequency" in item);
+        return item && "name" in item && "icon" in item && !("frequency" in item) && item.name !== "All";
     }
 
     function isHabitType(item) {
-        return "frequency" in item && "completedDays" in item;
+        return item && "frequency" in item && "completedDays" in item;
+    }
+
+    function deleteAreaFunction() {
+        if (!selectedItems) return;
+
+        deleteArea(allAreas, setAllAreas, selectedItems);
+        setOpenConfirmationWindow(false);
+        setSelectedItems(null);
     }
 
     function deleteOption() {
+        if (!selectedItems) return;
+
         if (isHabitType(selectedItems)) {
             deleteHabit(allHabits, setAllHabits, selectedItems);
             setOpenConfirmationWindow(false);
             setSelectedItems(null);
+        } else if (isAreaType(selectedItems)) {
+            deleteAreaFunction();
         }
     }
+
+    const getItemType = () => {
+        if (!selectedItems) return "item";
+        if (isAreaType(selectedItems)) return "area";
+        if (selectedItems?.isTask) return "task";
+        return "habit";
+    };
 
     return(
         <div
@@ -44,7 +66,7 @@ export default function ConfirmationComponent() {
                 {'Are you sure?'}
             </span>
             <span className={"text-center text-[13px] opacity-75"}>
-                Are you sure you want to delete this {selectedItems?.isTask ? "task" : "item"}?
+                Are you sure you want to delete this {getItemType()}?
                 <br/>
                 This action cannot be undone
             </span>

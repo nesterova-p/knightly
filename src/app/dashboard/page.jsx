@@ -16,26 +16,22 @@ export default function Dashboard() {
     const [selectedMenu, setSelectedMenu] = useState(null);
     const [notificationPermission, setNotificationPermission] = useState('default');
     const [hasRequestedPermission, setHasRequestedPermission] = useState(false);
-    const [isClient, setIsClient] = useState(false);
-
-    let selectedComponent = null;
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setIsClient(true);
+        setMounted(true);
+
         if (typeof window !== 'undefined' && 'Notification' in window) {
             setNotificationPermission(Notification.permission);
         }
-    }, []);
 
-    useEffect(() => {
-        if (!isClient) return;
         checkScheduledNotifications();
         const interval = setInterval(checkScheduledNotifications, 60000);
         return () => clearInterval(interval);
-    }, [isClient]);
+    }, []);
 
     useEffect(() => {
-        if (!isClient || hasRequestedPermission) return;
+        if (!mounted || hasRequestedPermission) return;
 
         const requestPermissionOnLoad = async () => {
             if (typeof window === 'undefined' || !('Notification' in window)) return;
@@ -43,7 +39,9 @@ export default function Dashboard() {
                 setNotificationPermission(Notification.permission);
                 return;
             }
-            if (localStorage.getItem('notificationDeclined')) return;
+
+            const notificationDeclined = typeof window !== 'undefined' ? localStorage.getItem('notificationDeclined') : null;
+            if (notificationDeclined) return;
 
             setTimeout(async () => {
                 setHasRequestedPermission(true);
@@ -61,7 +59,9 @@ export default function Dashboard() {
                         });
                     } else {
                         setNotificationPermission('denied');
-                        localStorage.setItem('notificationDeclined', 'true');
+                        if (typeof window !== 'undefined') {
+                            localStorage.setItem('notificationDeclined', 'true');
+                        }
                         toast.error('No problem! You can enable notifications later in settings', {
                             id: 'permission-result'
                         });
@@ -71,10 +71,13 @@ export default function Dashboard() {
         };
 
         requestPermissionOnLoad();
-    }, [isClient, hasRequestedPermission]);
+    }, [mounted, hasRequestedPermission]);
 
     const handleRequestPermission = useCallback(async () => {
-        localStorage.removeItem('notificationDeclined');
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('notificationDeclined');
+        }
+
         const granted = await requestNotificationPermission();
         if (granted) {
             setNotificationPermission('granted');
@@ -93,6 +96,7 @@ export default function Dashboard() {
         })
     }, [menuItems]);
 
+    let selectedComponent = null;
     switch (selectedMenu && selectedMenu.name) {
         case "All Habits":
             selectedComponent = <AllHabits />;
@@ -114,7 +118,7 @@ export default function Dashboard() {
                 {selectedComponent}
                 <SoftLayer/>
 
-                {isClient && notificationPermission === 'denied' && (
+                {mounted && notificationPermission === 'denied' && (
                     <div className="fixed bottom-4 right-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow-lg">
                         <div className="flex">
                             <div className="flex-shrink-0">

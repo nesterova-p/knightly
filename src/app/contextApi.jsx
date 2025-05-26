@@ -111,7 +111,11 @@ const GlobalContext = createContext({
     selectedItemsObject: {
         selectedItems: null,
         setSelectedItems: () => {},
-    }
+    },
+    areaWindowObject: {
+        openAreaWindow: false,
+        setOpenAreaWindow: () => {},
+    },
 })
 
 export const GlobalContextProvider = ({ children }) => {
@@ -141,7 +145,7 @@ export const GlobalContextProvider = ({ children }) => {
     });
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
     const [selectedItems, setSelectedItems] = useState(null);
-
+    const [openAreaWindow, setOpenAreaWindow] = useState(false);
     const { isLoaded, isSignedIn, user } = useUser();
 
     useEffect(() => {
@@ -183,14 +187,41 @@ export const GlobalContextProvider = ({ children }) => {
             }
         };
 
-        function fetchAllAreas() {
-            const allAreasData = [
-                { _id: uuidv4(), icon: textToIcon("faGlobe"), name: "All" },
-                { _id: uuidv4(), icon: textToIcon("faBook"), name: "Study" },
-                { _id: uuidv4(), icon: textToIcon("faLaptopCode"), name: "Code" }
-            ];
+        async function fetchAllAreas() {
+            try {
+                const response = await fetch(`/api/areas?clerkUserId=${user?.id}`);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch areas");
+                }
+                const data = await response.json();
 
-            setAllAreas(allAreasData);
+                const updatedAreas = data.areas.map((area) => {
+                    if (typeof area.icon === "string") {
+                        return {
+                            ...area,
+                            icon: textToIcon(area.icon),
+                        };
+                    }
+                    return area;
+                });
+
+                // Always include "All" area at the beginning
+                const allAreasData = [
+                    { _id: "all", icon: textToIcon("faGlobe"), name: "All" },
+                    ...updatedAreas
+                ];
+
+                setAllAreas(allAreasData);
+            } catch (error) {
+                console.error("Error fetching areas:", error);
+                // Fallback to default areas if fetch fails
+                const defaultAreas = [
+                    { _id: "all", icon: textToIcon("faGlobe"), name: "All" },
+                    { _id: "study", icon: textToIcon("faBook"), name: "Study" },
+                    { _id: "code", icon: textToIcon("faLaptopCode"), name: "Code" }
+                ];
+                setAllAreas(defaultAreas);
+            }
         }
 
         if (isLoaded && isSignedIn) {
@@ -243,7 +274,11 @@ export const GlobalContextProvider = ({ children }) => {
             selectedItemsObject: {
                 selectedItems,
                 setSelectedItems
-            }
+            },
+            areaWindowObject: {
+                openAreaWindow,
+                setOpenAreaWindow,
+            },
         }}>
             {children}
         </GlobalContext.Provider>
