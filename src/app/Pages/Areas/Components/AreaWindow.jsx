@@ -11,12 +11,14 @@ export default function AreaWindow() {
     const {
         areaWindowObject,
         selectedItemsObject,
-        allAreasObject
+        allAreasObject,
+        allHabitObject
     } = useGlobalContextProvider();
 
     const { openAreaWindow, setOpenAreaWindow } = areaWindowObject;
     const { selectedItems, setSelectedItems } = selectedItemsObject;
     const { allAreas, setAllAreas } = allAreasObject;
+    const { allHabits, setAllHabits } = allHabitObject;
     const { user } = useUser();
 
     const [areaName, setAreaName] = useState("");
@@ -68,7 +70,9 @@ export default function AreaWindow() {
                 allAreas,
                 setAllAreas,
                 selectedArea: selectedItems,
-                area: updatedArea
+                area: updatedArea,
+                allHabits,
+                setAllHabits
             });
 
             if (success) {
