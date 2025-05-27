@@ -81,7 +81,60 @@ export function calculateStreak(habit) {
 }
 
 export function calculateCurrentStreak(habit) {
-    return calculateStreak(habit);
+    if (!habit || !habit.completedDays || habit.completedDays.length === 0) {
+        return 0;
+    }
+
+    if (habit.isTask || (habit.frequency && habit.frequency[0]?.type === "Once")) {
+        const streak = habit.completedDays.length > 0 ? 1 : 0;
+        return streak;
+    }
+
+    if (!habit.frequency || !habit.frequency[0] || !habit.frequency[0].days) {
+        return 0;
+    }
+
+    const scheduledDays = habit.frequency[0].days.filter(d => d.isSelected);
+    if (scheduledDays.length === 0) {
+        return 0;
+    }
+
+    const completedDates = habit.completedDays
+        .map(day => day.date)
+        .sort((a, b) => new Date(b) - new Date(a));
+
+    if (completedDates.length === 0) {
+        return 0;
+    }
+
+    const dayNameMap = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+    let streak = 0;
+
+    let currentDate = new Date(completedDates[0]);
+    currentDate.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 365; i++) {
+        const dateStr = currentDate.toISOString().split('T')[0];
+        const dayOfWeek = dayNameMap[currentDate.getDay()];
+
+        const wasScheduled = scheduledDays.some(day => day.name === dayOfWeek);
+
+        if (wasScheduled) {
+            const wasCompleted = completedDates.includes(dateStr);
+
+            if (wasCompleted) {
+                streak++;
+            } else {
+                break; // Streak broken
+            }
+        } else {
+            console.log(`Day ${dateStr} (${dayOfWeek}): not scheduled - continuing`);
+        }
+
+        currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    return streak;
 }
 
 export function calculateTotalPerfectDays(allHabits) {

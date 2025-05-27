@@ -25,38 +25,49 @@ export default function MainStats() {
             return;
         }
 
-        const currentDate = new Date(selectedCurrentDay);
-        currentDate.setHours(0, 0, 0, 0);
-        const dayOfWeek = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"][currentDate.getDay()];
-        const dateStr = currentDate.toISOString().split('T')[0];
+        const [year, month, day] = selectedCurrentDay.split('-').map(Number);
+        const currentDate = new Date(year, month - 1, day);
+        const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+        const dayId = dayOfWeek === 0 ? 7 : dayOfWeek; // Convert to 1-7 where 1=Monday
+        const dayNames = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+        const dayName = dayNames[dayOfWeek];
 
-        const todayHabits = allHabits.filter((habit) => {
-            if (habit.isTask) {
-                if (!habit.dueDate) return false;
-                const taskDueDate = new Date(habit.dueDate);
-                taskDueDate.setHours(0, 0, 0, 0);
-                return taskDueDate.toISOString().split('T')[0] === dateStr;
-            } else {
-                // Check if habit is scheduled for this day
-                return habit.frequency &&
-                    habit.frequency[0] &&
-                    habit.frequency[0].days &&
-                    habit.frequency[0].days.some(day => day.name === dayOfWeek && day.isSelected);
+        let scheduledHabits = [];
+
+        allHabits.forEach((habit) => {
+            let isScheduledForToday = false;
+
+            if (habit.isTask || (habit.frequency && habit.frequency[0]?.type === "Once")) {
+                if (habit.dueDate) {
+                    const taskDueDate = new Date(habit.dueDate);
+                    const taskDateStr = taskDueDate.toISOString().split('T')[0];
+                    isScheduledForToday = taskDateStr === selectedCurrentDay;
+                }
+            } else if (habit.frequency && habit.frequency[0] && habit.frequency[0].type === "Each Day") {
+                isScheduledForToday = true;
+            } else if (habit.frequency && habit.frequency[0] && habit.frequency[0].days) {
+                isScheduledForToday = habit.frequency[0].days.some(
+                    (day) => day.id === dayId && day.isSelected
+                );
+            }
+
+            if (isScheduledForToday) {
+                scheduledHabits.push(habit);
             }
         });
 
-        if (todayHabits.length === 0) {
+        if (scheduledHabits.length === 0) {
             setTodayProgress(100); // No habits scheduled = 100% complete
             return;
         }
 
-        const completedToday = todayHabits.filter((habit) =>
-                habit.completedDays && habit.completedDays.some(
-                    (day) => day.date === dateStr
-                )
-        );
+        const completedHabits = scheduledHabits.filter((habit) => {
+            return habit.completedDays && habit.completedDays.some(
+                (day) => day.date === selectedCurrentDay
+            );
+        });
 
-        const progress = Math.round((completedToday.length / todayHabits.length) * 100);
+        const progress = Math.round((completedHabits.length / scheduledHabits.length) * 100);
         setTodayProgress(progress);
     };
 
@@ -65,7 +76,6 @@ export default function MainStats() {
             setBestStreak(0);
             return;
         }
-
         let maxStreak = 0;
         allHabits.forEach(habit => {
             const streak = calculateCurrentStreak(habit);
@@ -82,7 +92,6 @@ export default function MainStats() {
             setPerfectDays(0);
             return;
         }
-
         const perfectDayCount = calculateTotalPerfectDays(allHabits);
         setPerfectDays(perfectDayCount);
     };
