@@ -116,6 +116,10 @@ const GlobalContext = createContext({
         openAreaWindow: false,
         setOpenAreaWindow: () => {},
     },
+    searchHabitsObject: {
+        searchQuery: "",
+        setSearchQuery: () => {},
+    },
 })
 
 export const GlobalContextProvider = ({ children }) => {
@@ -147,6 +151,7 @@ export const GlobalContextProvider = ({ children }) => {
     const [selectedItems, setSelectedItems] = useState(null);
     const [openAreaWindow, setOpenAreaWindow] = useState(false);
     const { isLoaded, isSignedIn, user } = useUser();
+    const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
         const fetchAllHabits = async () => {
@@ -295,6 +300,10 @@ export const GlobalContextProvider = ({ children }) => {
             areaWindowObject: {
                 openAreaWindow,
                 setOpenAreaWindow,
+            },
+            searchHabitsObject: {
+                searchQuery,
+                setSearchQuery,
             },
         }}>
             {children}

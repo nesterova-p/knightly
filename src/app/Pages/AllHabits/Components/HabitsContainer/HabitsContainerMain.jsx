@@ -9,18 +9,24 @@ export default function HabitsContainerMain() {
         allHabitObject,
         selectedCurrentDayObject,
         selectedAreaStringObject,
-        allFilteredHabitsObject
+        allFilteredHabitsObject,
+        searchHabitsObject
     } = useGlobalContextProvider();
 
     const { allHabits } = allHabitObject;
     const { selectedCurrentDay } = selectedCurrentDayObject;
     const { selectedAreaString } = selectedAreaStringObject;
     const { allFilteredHabits, setAllFilteredHabits } = allFilteredHabitsObject;
+    const { searchQuery } = searchHabitsObject;
 
     useEffect(() => {
-        const currentDate = new Date(selectedCurrentDay);
-        const currentDayIndex = currentDate.getDay();
-        const dayId = currentDayIndex === 0 ? 7 : currentDayIndex;
+        const currentDate = new Date();
+        const [year, month, day] = selectedCurrentDay.split('-').map(Number);
+        currentDate.setFullYear(year, month - 1, day);
+        currentDate.setHours(0, 0, 0, 0);
+
+        const dayOfWeek = currentDate.getDay();
+        const dayId = dayOfWeek === 0 ? 7 : dayOfWeek;
 
         console.log("Current day index:", dayId, "Selected area:", selectedAreaString);
 
@@ -29,7 +35,7 @@ export default function HabitsContainerMain() {
                 if (singleHabit.dueDate) {
                     const taskDueDate = new Date(singleHabit.dueDate);
                     const taskDateString = taskDueDate.toISOString().split('T')[0];
-                    const currentDateString = currentDate.toISOString().split('T')[0];
+                    const currentDateString = selectedCurrentDay;
                     return taskDateString === currentDateString;
                 }
                 return false;
@@ -53,9 +59,16 @@ export default function HabitsContainerMain() {
             filteredHabitsByArea = filteredHabitsByFrequency;
         }
 
-        setAllFilteredHabits(filteredHabitsByArea);
+        let filteredHabitsBySearch = filteredHabitsByArea;
+        if (searchQuery.trim()) {
+            filteredHabitsBySearch = filteredHabitsByArea.filter((habit) =>
+                habit.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
 
-    }, [selectedCurrentDay, allHabits, selectedAreaString, setAllFilteredHabits]);
+        setAllFilteredHabits(filteredHabitsBySearch);
+
+    }, [selectedCurrentDay, allHabits, selectedAreaString, searchQuery, setAllFilteredHabits]); // DODANE searchQuery
 
     const nonEmptyHabits = allFilteredHabits.filter(habit => habit && habit.name && habit.name.trim() !== "");
 
@@ -70,6 +83,8 @@ export default function HabitsContainerMain() {
             (day) => day.date === selectedCurrentDay
         ));
     });
+
+    const isEmptyDueToSearch = searchQuery.trim() && nonEmptyHabits.length === 0;
 
     return (
         <div className="p-3">
@@ -86,8 +101,32 @@ export default function HabitsContainerMain() {
                     )}
                 </>
             ) : (
-                <EmptyPlaceHolder/>
+                isEmptyDueToSearch ? (
+                    <SearchEmptyPlaceHolder searchQuery={searchQuery} />
+                ) : (
+                    <EmptyPlaceHolder/>
+                )
             )}
+        </div>
+    );
+}
+
+function SearchEmptyPlaceHolder({ searchQuery }) {
+    const { searchHabitsObject } = useGlobalContextProvider();
+    const { setSearchQuery } = searchHabitsObject;
+
+    return (
+        <div className={"flex justify-center items-center flex-col py-8"}>
+            <div className="text-6xl mb-4">🔍</div>
+            <span className={"text-center text-gray-500 py-2"}>
+                No habits found for "<strong>{searchQuery}</strong>"
+            </span>
+            <button
+                onClick={() => setSearchQuery("")}
+                className="mt-3 px-4 py-2 text-sm bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+            >
+                Clear search
+            </button>
         </div>
     );
 }

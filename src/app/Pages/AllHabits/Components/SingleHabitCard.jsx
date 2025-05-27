@@ -15,7 +15,8 @@ export function SingleHabitCard({ singleHabit }) {
         selectedCurrentDayObject,
         openDropDownObject,
         dropDownPositionsObject,
-        selectedItemsObject
+        selectedItemsObject,
+        searchHabitsObject
     } = useGlobalContextProvider();
 
     const { allHabits, setAllHabits } = allHabitObject;
@@ -23,6 +24,7 @@ export function SingleHabitCard({ singleHabit }) {
     const { setOpenDropDown } = openDropDownObject;
     const { setDropDownPositions } = dropDownPositionsObject;
     const { setSelectedItems } = selectedItemsObject;
+    const { searchQuery } = searchHabitsObject;
 
     const iconObject = singleHabit.icon ?
         (typeof singleHabit.icon === 'string' ? textToIcon(singleHabit.icon) : singleHabit.icon)
@@ -83,6 +85,25 @@ export function SingleHabitCard({ singleHabit }) {
         setOpenDropDown(true);
     }
 
+    const highlightSearchText = (text, search) => {
+        if (!search.trim()) {
+            return text;
+        }
+
+        const regex = new RegExp(`(${search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        const parts = text.split(regex);
+
+        return parts.map((part, index) =>
+            regex.test(part) ? (
+                <mark key={index} className="bg-pink-300 px-1 rounded">
+                    {part}
+                </mark>
+            ) : (
+                part
+            )
+        );
+    };
+
     return (
         <div className="flex p-3 items-center justify-between">
             <Checkbox
@@ -108,7 +129,9 @@ export function SingleHabitCard({ singleHabit }) {
                                 width={20}
                                 icon={iconObject}
                             />
-                            <span className="">{singleHabit.name}</span>
+                            <span className="">
+                                {highlightSearchText(singleHabit.name, searchQuery)}
+                            </span>
                         </div>
                     </div>
                     <div className="flex gap-2 mt-3">
