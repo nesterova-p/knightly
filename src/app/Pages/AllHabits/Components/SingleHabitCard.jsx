@@ -105,7 +105,7 @@ export function SingleHabitCard({ singleHabit }) {
     };
 
     return (
-        <div className="flex p-3 items-center justify-between">
+        <div className="flex p-2 sm:p-3 items-center justify-between">
             <Checkbox
                 icon={<RadioButtonUncheckedIcon />}
                 checkedIcon={<CheckCircleIcon />}
@@ -116,29 +116,33 @@ export function SingleHabitCard({ singleHabit }) {
                     "&.Mui-checked": {
                         color: "#9EC77D",
                     },
+                    padding: { xs: '4px', sm: '9px' },
+                    '& .MuiSvgIcon-root': {
+                        fontSize: { xs: '1.2rem', sm: '1.5rem' }
+                    }
                 }}
             />
 
-            <div className="bg-slate-50 flex justify-between gap-2 w-full p-3 py-4 rounded-xl">
-                <div className="w-full">
-                    <div className="flex gap-2 justify-between">
-                        <div className="flex gap-2 items-center">
+            <div className="bg-slate-50 flex justify-between gap-2 w-full p-2 sm:p-3 py-3 sm:py-4 rounded-xl">
+                <div className="w-full min-w-0">
+                    <div className="flex gap-2 justify-between items-start">
+                        <div className="flex gap-2 items-center min-w-0 flex-1">
                             <FontAwesomeIcon
-                                className="p-3 rounded-full w-4 h-4 bg-primary text-white"
-                                height={20}
-                                width={20}
+                                className="p-2 sm:p-3 rounded-full w-3 h-3 sm:w-4 sm:h-4 bg-primary text-white flex-shrink-0"
+                                height={16}
+                                width={16}
                                 icon={iconObject}
                             />
-                            <span className="">
+                            <span className="text-sm sm:text-base truncate">
                                 {highlightSearchText(singleHabit.name, searchQuery)}
                             </span>
                         </div>
                     </div>
-                    <div className="flex gap-2 mt-3">
+                    <div className="flex gap-1 sm:gap-2 mt-2 sm:mt-3 flex-wrap">
                         {singleHabit.areas && singleHabit.areas.map((singleArea, index) => (
                             <div
                                 key={index}
-                                className="p-1 text-[12px] rounded-md px-2 bg-primary text-white"
+                                className="p-1 text-[10px] sm:text-[12px] rounded-md px-1 sm:px-2 bg-primary text-white"
                             >
                                 <span>{singleArea.name}</span>
                             </div>
@@ -146,12 +150,12 @@ export function SingleHabitCard({ singleHabit }) {
                     </div>
                 </div>
 
-                <div className="w-10 flex items-center justify-center">
+                <div className="w-8 sm:w-10 flex items-center justify-center flex-shrink-0">
                     <button
-                        className="focus:outline-none"
+                        className="focus:outline-none p-1"
                         onClick={handleClickThreeDots}
                     >
-                        <MoreVertIcon sx={{ color: "gray" }} />
+                        <MoreVertIcon sx={{ color: "gray", fontSize: { xs: '1.2rem', sm: '1.5rem' } }} />
                     </button>
                 </div>
             </div>

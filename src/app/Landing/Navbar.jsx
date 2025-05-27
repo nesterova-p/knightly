@@ -9,34 +9,35 @@ export default function Navbar() {
     const {userId} = useAuth();
     return (
         <header>
-            <div className="p-8 px-20">
+            <div className="p-4 px-4 sm:p-6 sm:px-8 md:p-8 md:px-20">
                 <div className="sm:flex sm:items-center sm:justify-between">
                     {/* Logo + name */}
-                    <LogoAndName/>
+                    <div className="flex justify-center sm:justify-start mb-4 sm:mb-0">
+                        <LogoAndName/>
+                    </div>
 
                     {/* Buttons */}
-
-                    <div>
+                    <div className="flex justify-center">
                         {userId ? (
                             <Link href={"/dashboard"}>
-                                <button className={"block    rounded-lg  px-9 py-3 text-sm font-medium text-white transition bg-primary"}>
+                                <button className={"block rounded-lg px-6 sm:px-9 py-3 text-sm font-medium text-white transition bg-primary"}>
                                     Dashboard
                                 </button>
                             </Link>
                         ) : (
-                            <div className="mt-4 flex flex-col gap-4 sm:mt-0 sm:flex-row sm:items-center">
+                            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 w-full sm:w-auto">
                                 <Link href={"/sign-in"}>
                                     <button
-                                    type="button"
-                                    className="block sm:w-32 w-full rounded-lg px-9 py-3 text-sm font-medium text-white bg-primary transition focus:outline-none"
+                                        type="button"
+                                        className="block w-full sm:w-32 rounded-lg px-6 sm:px-9 py-3 text-sm font-medium text-white bg-primary transition focus:outline-none"
                                     >
-                                    Sign In
+                                        Sign In
                                     </button>
                                 </Link>
                                 <Link href={"/sign-up"}>
                                     <button
                                         type="button"
-                                        className="block sm:w-32 w-full rounded-lg px-9 py-3 text-sm font-medium text-primary border border-primary transition focus:outline-none hover:bg-primary hover:text-white"
+                                        className="block w-full sm:w-32 rounded-lg px-6 sm:px-9 py-3 text-sm font-medium text-primary border border-primary transition focus:outline-none hover:bg-primary hover:text-white"
                                     >
                                         Sign Up
                                     </button>

@@ -32,24 +32,24 @@ export default function HabitsContainerTop() {
     };
 
     return (
-        <div className="p-3 flex justify-between items-center">
+        <div className="p-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div className="flex gap-4 items-center">
                 <div>
-                    <h2 className="font-bold text-lg w-28">{getCurrentDayName(selectedCurrentDay)}</h2>
+                    <h2 className="font-bold text-lg w-auto sm:w-28">{getCurrentDayName(selectedCurrentDay)}</h2>
                     <span className="font-light text-[12px]">{getFormattedDate(selectedCurrentDay)}</span>
                 </div>
 
                 <div className="flex gap-1 ml-4">
                     <div
                         onClick={() => updateDate("prev")}
-                        className="text-primary cursor-pointer"
+                        className="text-primary cursor-pointer p-1"
                     >
                         <ArrowCircleLeftOutlinedIcon />
                     </div>
 
                     <div
                         onClick={() => updateDate("next")}
-                        className="text-primary cursor-pointer"
+                        className="text-primary cursor-pointer p-1"
                     >
                         <ArrowCircleRightOutlinedIcon />
                     </div>
@@ -58,7 +58,7 @@ export default function HabitsContainerTop() {
 
             <button
                 onClick={handleOpenHabitWindow}
-                className="flex gap-2 items-center bg-primary p-3 text-white rounded-md text-sm hover:bg-primary/90 transition-colors"
+                className="flex gap-2 items-center bg-primary p-2 sm:p-3 text-white rounded-md text-sm hover:bg-primary/90 transition-colors w-full sm:w-auto justify-center"
             >
                 <FontAwesomeIcon icon={faPlus} />
                 <span>New Adventure</span>

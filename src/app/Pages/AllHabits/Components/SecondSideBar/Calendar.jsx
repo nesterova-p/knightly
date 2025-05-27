@@ -28,7 +28,7 @@ export default function Calendar() {
     }
 
     return (
-        <div className={`flex mx-4 w-full flex-col gap-6 justify-center items-center mt-5 mb-5 rounded-xl p-3 pt-5 ${isDarkMode ? 'bg-gray-800' : 'bg-slate-50'} max-sm:mx-2`}>
+        <div className={`flex mx-2 sm:mx-4 w-full flex-col gap-6 justify-center items-center mt-5 mb-5 rounded-xl p-2 sm:p-3 pt-3 sm:pt-5 ${isDarkMode ? 'bg-gray-800' : 'bg-slate-50'} max-sm:mx-2`}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateCalendar
                     onChange={handleOnChangeDate}
@@ -36,23 +36,25 @@ export default function Calendar() {
                     sx={{
                         width: '100%',
                         maxWidth: '100%',
+                        transform: { xs: 'scale(0.85)', sm: 'scale(1)' },
                         '& .MuiDayCalendar-header, & .MuiDayCalendar-weekContainer': {
                             justifyContent: 'space-around',
                             width: '100%'
                         },
                         '& .MuiPickersCalendarHeader-root': {
-                            paddingLeft: '10px',
-                            paddingRight: '10px',
+                            paddingLeft: { xs: '5px', sm: '10px' },
+                            paddingRight: { xs: '5px', sm: '10px' },
                         },
                         '& .MuiPickersCalendarHeader-label': {
-                            fontSize: { xs: '0.9rem', sm: '1rem' },
+                            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' },
                             color: isDarkMode ? '#FFFFFF' : '#1F2937'
                         },
                         "& .MuiPickersDay-root": {
                             fontWeight: '400',
                             borderRadius: '50%',
-                            fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                            padding: { xs: '0.5rem', sm: '0.75rem' },
+                            fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
+                            padding: { xs: '0.4rem', sm: '0.5rem', md: '0.75rem' },
+                            margin: { xs: '1px', sm: '2px' },
                             color: isDarkMode ? '#FFFFFF' : '#1F2937',
                             "&.Mui-selected": {
                                 border: "none",

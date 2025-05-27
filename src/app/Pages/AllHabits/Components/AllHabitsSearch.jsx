@@ -32,13 +32,13 @@ export default function AllHabitsSearch() {
     const hasSearchQuery = searchQuery.trim().length > 0;
 
     return (
-        <div className="w-64">
-            <div className="flex bg-slate-50 gap-3 items-center p-3 rounded-xl relative">
+        <div className="w-full sm:w-64">
+            <div className="flex bg-slate-50 gap-3 items-center p-2 sm:p-3 rounded-xl relative">
                 <FontAwesomeIcon
-                    height={20}
-                    width={20}
+                    height={18}
+                    width={18}
                     icon={faSearch}
-                    className="text-gray-300"
+                    className="text-gray-300 flex-shrink-0"
                 />
                 <input
                     className="outline-none text-sm font-light bg-slate-50 w-full pr-6"
@@ -49,7 +49,7 @@ export default function AllHabitsSearch() {
                 {hasSearchQuery && (
                     <button
                         onClick={clearSearch}
-                        className="absolute right-3 text-gray-400 hover:text-gray-600 transition-colors"
+                        className="absolute right-2 sm:right-3 text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
                         title="Clear search"
                     >
                         <FontAwesomeIcon

@@ -102,28 +102,30 @@ export default function MainStats() {
     ];
 
     return (
-        <div className="flex mx-4 max-sm:mx-2 w-full flex-col gap-4 justify-center items-center mt-5 rounded-xl p-4 pt-5 bg-slate-50">
-            <span className="font-bold text-xl cursor-pointer hover:text-primary transition-colors">
+        <div className="flex mx-2 sm:mx-4 max-sm:mx-2 w-full flex-col gap-4 justify-center items-center mt-5 rounded-xl p-3 sm:p-4 pt-5 bg-slate-50">
+            <span className="font-bold text-lg sm:text-xl cursor-pointer hover:text-primary transition-colors">
                 Statistics
             </span>
 
             <div className="relative pt-2 w-full flex justify-center">
-                <CircularProgressBar progress={todayProgress} />
+                <div className="scale-75 sm:scale-100">
+                    <CircularProgressBar progress={todayProgress} />
+                </div>
                 <div className="flex flex-col justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <span className="font-bold text-xl text-primary mt-2">
+                    <span className="font-bold text-lg sm:text-xl text-primary mt-2">
                         {todayProgress}%
                     </span>
-                    <span className="text-[11px] text-slate-400 text-center mt-1">
+                    <span className="text-[10px] sm:text-[11px] text-slate-400 text-center mt-1">
                         Today's Progress
                     </span>
                 </div>
             </div>
 
-            <div className="my-2 flex justify-center gap-6 flex-wrap items-center w-full max-sm:gap-4">
+            <div className="my-2 flex justify-center gap-3 sm:gap-6 flex-wrap items-center w-full max-sm:gap-4">
                 {statisticsInfo.map((singleItem, singleItemIndex) => (
-                    <div className="flex items-center gap-3" key={singleItemIndex}>
+                    <div className="flex items-center gap-2 sm:gap-3" key={singleItemIndex}>
                         <div className="w-2 h-2 bg-customRed rounded-full"></div>
-                        <div className="text-[12px]">
+                        <div className="text-[11px] sm:text-[12px]">
                             <span className="flex flex-col font-bold">
                                 {singleItem.num}
                             </span>
