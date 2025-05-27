@@ -27,6 +27,11 @@ export async function addNewHabit({
         });
 
         if (!response.ok) {
+            const errorData = await response.json();
+            if (errorData.error === "A habit with this name already exists") {
+                toast.error(`${updatedHabit.isTask ? "Task" : "Habit"} with this name already exists!`);
+                return;
+            }
             throw new Error("Failed to add habit");
         }
 
@@ -41,10 +46,7 @@ export async function addNewHabit({
                 if (Notification.permission !== 'granted') {
                     const granted = await requestNotificationPermission();
                     if (!granted) {
-                        toast.error('Please enable notifications to receive reminders', {
-                            duration: 4000,
-                        });
-                        toast.success(`${updatedIdOfHabit.isTask ? "Task" : "Habit"} added successfully (without reminders)!`);
+                        toast.success(`${updatedIdOfHabit.isTask ? "Task" : "Habit"} added successfully!`);
                         return;
                     }
                 }
@@ -73,7 +75,7 @@ export async function addNewHabit({
                                     selectedDays,
                                     updatedIdOfHabit.name
                                 );
-                                toast.success(`Habit "${updatedIdOfHabit.name}" added with reminders on ${selectedDays.join(', ')}!`);
+                                toast.success(`Habit "${updatedIdOfHabit.name}" added with reminders!`);
                             } else {
                                 toast.success(`Habit "${updatedIdOfHabit.name}" added successfully!`);
                             }
@@ -82,10 +84,10 @@ export async function addNewHabit({
                         }
                     }
                 } catch (notificationError) {
-                    toast.error('Habit added but there was an issue scheduling reminders');
+                    toast.error('Habit added but reminder setup failed');
                 }
             } else {
-                toast.success(`${updatedIdOfHabit.isTask ? "Task" : "Habit"} added successfully (notifications not supported)!`);
+                toast.success(`${updatedIdOfHabit.isTask ? "Task" : "Habit"} added successfully!`);
             }
         } else {
             toast.success(`${updatedIdOfHabit.isTask ? "Task" : "Habit"} added successfully!`);

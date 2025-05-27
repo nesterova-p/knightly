@@ -10,21 +10,18 @@ export async function requestNotificationPermission() {
     }
 
     if (Notification.permission === 'denied') {
-        toast.error('Notifications are blocked. Please enable them in your browser settings.');
         return false;
     }
 
     try {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
-            toast.success('Notifications enabled!');
             return true;
         } else {
-            toast.error('Notifications permission denied');
             return false;
         }
     } catch (error) {
-        toast.error('Error requesting notification permission');
+        console.error('Error requesting notification permission:', error);
         return false;
     }
 }
