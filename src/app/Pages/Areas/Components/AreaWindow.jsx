@@ -72,7 +72,7 @@ export default function AreaWindow() {
                 selectedArea: selectedItems,
                 area: updatedArea,
                 allHabits,
-                setAllHabits
+                setAllHabits,
             });
 
             if (success) {

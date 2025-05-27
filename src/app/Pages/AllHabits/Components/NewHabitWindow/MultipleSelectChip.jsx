@@ -65,6 +65,12 @@ export default function MultipleSelectChip({ onChange }) {
         );
     };
 
+    const handleDeleteChip = (event, areaNameToDelete) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const updatedSelectedAreas = selectedAreas.filter(name => name !== areaNameToDelete);
+        setSelectedAreas(updatedSelectedAreas);
+    };
 
     React.useEffect(() => {
         if (openHabitWindow) {
@@ -147,6 +153,34 @@ export default function MultipleSelectChip({ onChange }) {
                                 <Chip
                                     key={value}
                                     label={value}
+                                    deleteIcon={
+                                        <span
+                                            onMouseDown={(event) => handleDeleteChip(event, value)}
+                                            style={{
+                                                cursor: 'pointer',
+                                                fontSize: '18px',
+                                                color: '#999',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                width: '20px',
+                                                height: '20px',
+                                                borderRadius: '50%',
+                                                transition: 'all 0.2s ease'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.backgroundColor = '#f472b6';
+                                                e.target.style.color = 'white';
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.backgroundColor = 'transparent';
+                                                e.target.style.color = '#999';
+                                            }}
+                                        >
+                                            ×
+                                        </span>
+                                    }
+                                    onDelete={() => {}}
                                     sx={{
                                         bgcolor: '#f0f0f0',
                                         color: '#666',
@@ -154,6 +188,12 @@ export default function MultipleSelectChip({ onChange }) {
                                         height: '28px',
                                         '& .MuiChip-label': {
                                             fontWeight: 500,
+                                        },
+                                        '& .MuiChip-deleteIcon': {
+                                            color: '#999',
+                                            '&:hover': {
+                                                color: '#666',
+                                            }
                                         }
                                     }}
                                 />

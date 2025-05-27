@@ -25,8 +25,7 @@ export default function ConfirmationComponent() {
 
     function deleteAreaFunction() {
         if (!selectedItems) return;
-
-        deleteArea(allAreas, setAllAreas, selectedItems);
+        deleteArea(allAreas, setAllAreas, selectedItems, allHabits, setAllHabits);
         setOpenConfirmationWindow(false);
         setSelectedItems(null);
     }
