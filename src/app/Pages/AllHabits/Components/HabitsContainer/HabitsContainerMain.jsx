@@ -25,7 +25,7 @@ export default function HabitsContainerMain() {
         console.log("Current day index:", dayId, "Selected area:", selectedAreaString);
 
         const filteredHabitsByFrequency = allHabits.filter((singleHabit) => {
-            if (singleHabit.isTask || (singleHabit.frequency && singleHabit.frequency[0]?.type === "None")) {
+            if (singleHabit.isTask || (singleHabit.frequency && singleHabit.frequency[0]?.type === "Once")) {
                 if (singleHabit.dueDate) {
                     const taskDueDate = new Date(singleHabit.dueDate);
                     const taskDateString = taskDueDate.toISOString().split('T')[0];

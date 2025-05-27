@@ -1,7 +1,7 @@
 import {useGlobalContextProvider} from "../../../../contextApi";
 import React, {useCallback, useEffect, useState} from "react";
 import DailyOptions from "./DailyOptions";
-import WeeklyOption from "./WeeklyOption";
+import EachDayOption from "./EveryDayOption";
 import DateOption from "./DateOption";
 
 export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFrequencyChange, initialFrequency, onDateChange }){
@@ -10,9 +10,9 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
     const { selectedItems } = selectedItemsObject;
 
     const [repeatOption, setRepeatOption] = useState([
-        {name: "None", isSelected: false},
+        {name: "Once", isSelected: false},
         {name: "Daily", isSelected: true},
-        {name: "Weekly", isSelected: false},
+        {name: "Every Day", isSelected: false},
     ]);
 
     const defaultDays = [
@@ -59,7 +59,12 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
         if (openHabitWindow) {
             if (selectedItems) {
                 const currentHabitSelected = selectedItems;
-                const selectedOptionOfHabitSelected = currentHabitSelected.frequency[0].type;
+                let selectedOptionOfHabitSelected = currentHabitSelected.frequency[0].type;
+                if (selectedOptionOfHabitSelected === "None") {
+                    selectedOptionOfHabitSelected = "Once";
+                } else if (selectedOptionOfHabitSelected === "Weekly") {
+                    selectedOptionOfHabitSelected = "Every Day";
+                }
 
                 const copyRepeatOptions = repeatOption.map((singleOption) => {
                     if (singleOption.name === selectedOptionOfHabitSelected) {
@@ -123,13 +128,13 @@ export default function Repeat({ onChangeOption, initialDays, onDaysChange, onFr
                 ))}
             </div>
 
-            {selectedOption === "None" ? (
+            {selectedOption === "Once" ? (
                 <DateOption selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             ) : selectedOption === "Daily" ? (
                 <DailyOptions allDays={allDays} setAllDays={setAllDays} />
-            ) : (
-                <WeeklyOption weeks={weeks} setWeeks={setWeeks} />
-            )}
+            ) : selectedOption === "Every Day" ? (
+                <EachDayOption allDays={allDays} setAllDays={setAllDays} />
+            ) : null}
         </div>
     );
 }

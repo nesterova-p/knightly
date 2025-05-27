@@ -180,8 +180,27 @@ export const GlobalContextProvider = ({ children }) => {
                     return { ...habit, areas: updatedAreas };
                 });
 
-                console.log(updatedHabitsWithAreas);
-                setAllHabits(updatedHabitsWithAreas);
+                const updatedHabitsWithMappedFrequency = updatedHabitsWithAreas.map((habit) => {
+                    if (habit.frequency && habit.frequency[0] && habit.frequency[0].type) {
+                        const updatedFrequency = [...habit.frequency];
+                        if (updatedFrequency[0].type === "None") {
+                            updatedFrequency[0].type = "Once";
+                        } else if (updatedFrequency[0].type === "Weekly") {
+                            updatedFrequency[0].type = "Each Day";
+                            updatedFrequency[0].days = updatedFrequency[0].days.map(day => ({
+                                ...day,
+                                isSelected: true
+                            }));
+                        }
+                        return { ...habit, frequency: updatedFrequency };
+                    }
+                    return habit;
+                });
+
+                console.log(updatedHabitsWithMappedFrequency);
+                setAllHabits(updatedHabitsWithMappedFrequency);
+
+
             } catch (error) {
                 console.error("Error fetching habits:", error);
             }
@@ -205,7 +224,6 @@ export const GlobalContextProvider = ({ children }) => {
                     return area;
                 });
 
-                // Always include "All" area at the beginning
                 const allAreasData = [
                     { _id: "all", icon: textToIcon("faGlobe"), name: "All" },
                     ...updatedAreas
@@ -214,7 +232,6 @@ export const GlobalContextProvider = ({ children }) => {
                 setAllAreas(allAreasData);
             } catch (error) {
                 console.error("Error fetching areas:", error);
-                // Fallback to default areas if fetch fails
                 const defaultAreas = [
                     { _id: "all", icon: textToIcon("faGlobe"), name: "All" },
                     { _id: "study", icon: textToIcon("faBook"), name: "Study" },

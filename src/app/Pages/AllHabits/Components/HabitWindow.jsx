@@ -56,7 +56,7 @@ export default function HabitWindow() {
                 ...prev.frequency[0],
                 type: nameOfSelectedOption
             }],
-            isTask: nameOfSelectedOption === "None"
+            isTask: nameOfSelectedOption === "Once"
         }));
     }, [setHabitItem]);
 
