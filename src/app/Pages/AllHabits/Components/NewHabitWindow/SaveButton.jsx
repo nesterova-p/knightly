@@ -30,51 +30,35 @@ export default function SaveButton({ habit }) {
         }
 
         if (!selectedItems) {
-            const habitExist = allHabits.some(
-                (singleHabit) => singleHabit.name === habit.name
-            );
-
-            if (!habitExist) {
-                try {
-                    await addNewHabit({
-                        allHabits,
-                        setAllHabits,
-                        habit
-                    });
-                    setOpenHabitWindow(false);
-                    setSelectedItems(null);
-                } catch (error) {
-                    console.error("Error adding habit:", error);
-                }
-            } else {
-                toast.error(`${habit?.isTask ? "Task" : "Habit"} already exists`);
+            try {
+                await addNewHabit({
+                    allHabits,
+                    setAllHabits,
+                    habit
+                });
+                setOpenHabitWindow(false);
+                setSelectedItems(null);
+            } catch (error) {
+                console.error("Error adding habit:", error);
             }
         } else {
-            const habitExist = allHabits.some(
-                (singleHabit) => singleHabit.name === habit.name && singleHabit._id !== selectedItems._id
-            );
+            try {
+                const success = await updateHabitInServer({
+                    allHabits,
+                    setAllHabits,
+                    selectedItems,
+                    habit
+                });
 
-            if (!habitExist) {
-                try {
-                    const success = await updateHabitInServer({
-                        allHabits,
-                        setAllHabits,
-                        selectedItems,
-                        habit
-                    });
-
-                    if (success) {
-                        setOpenHabitWindow(false);
-                        setTimeout(() => {
-                            setSelectedItems(null);
-                        }, 100);
-                    }
-                } catch (error) {
-                    console.error("Error updating habit:", error);
-                    toast.error("Something went wrong...");
+                if (success) {
+                    setOpenHabitWindow(false);
+                    setTimeout(() => {
+                        setSelectedItems(null);
+                    }, 100);
                 }
-            } else {
-                toast.error(`A ${habit?.isTask ? "task" : "habit"} with this name already exists!`);
+            } catch (error) {
+                console.error("Error updating habit:", error);
+                toast.error("Something went wrong...");
             }
         }
     }

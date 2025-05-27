@@ -26,8 +26,20 @@ export async function POST(req) {
 
         await connectToDB();
 
+        const existingHabit = await HabitsCollection.findOne({
+            name: name.trim(),
+            clerkUserId: clerkUserId
+        });
+
+        if (existingHabit) {
+            return NextResponse.json(
+                { error: "A habit with this name already exists" },
+                { status: 400 }
+            );
+        }
+
         const habit = new HabitsCollection({
-            name,
+            name: name.trim(),
             icon: icon || "faIcons",
             isTask: isTask || false,
             hasReminder: hasReminder || false,
@@ -147,11 +159,24 @@ export async function PUT(request) {
 
         await connectToDB();
 
+        const existingHabit = await HabitsCollection.findOne({
+            name: name.trim(),
+            clerkUserId,
+            _id: { $ne: habitId }
+        });
+
+        if (existingHabit) {
+            return NextResponse.json(
+                { message: "A habit with this name already exists" },
+                { status: 400 }
+            );
+        }
+
         const updatedHabit = await HabitsCollection.findOneAndUpdate(
             { _id: habitId, clerkUserId },
             {
                 $set: {
-                    name,
+                    name: name.trim(),
                     icon,
                     frequency,
                     notificationTime: notificationTime || reminderTime,
