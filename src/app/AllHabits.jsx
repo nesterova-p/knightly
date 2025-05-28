@@ -18,7 +18,7 @@ export default function AllHabits() {
             <AreaWindow/>
             <DropDown/>
             <ConfirmationComponent/>
-            <div className={"flex-col flex-grow m-2 sm:m-4 order-2 max-lg:order-2"}>
+            <div className={"flex-col flex-grow m-2 sm:m-4"}>
                 <AllHabitsTop/>
                 <AreasContainer/>
                 <HabitsContainer/>

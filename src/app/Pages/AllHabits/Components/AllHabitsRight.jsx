@@ -5,7 +5,7 @@ import DarkMode from "../../AllHabits/Components/DarkMode";
 
 export function AllHabitsRight() {
     return (
-        <div className="w-[30%] max-lg:w-full bg-white flex flex-col items-center m-2 sm:m-5 rounded-lg p-2 max-lg:order-1 order-3">
+        <div className="w-[30%] max-xl:w-full bg-white flex flex-col items-center m-2 sm:m-5 rounded-lg p-2">
             <div className="px-4 mb-4 w-full">
                 <div className="flex flex-col mb-3 mt-2">
                     <span className="text-lg sm:text-xl">
