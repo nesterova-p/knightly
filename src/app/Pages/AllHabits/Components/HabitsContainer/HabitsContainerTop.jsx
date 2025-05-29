@@ -5,6 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useGlobalContextProvider } from "../../../../contextApi";
 import { useState, useEffect } from "react";
 import { getDateString, getCurrentDayName, getFormattedDate } from "../../../../utils/dateFormating";
+import {PixelButtonIcon} from "../../../../../components/pixel-ui/PixelButton/PixelButton";
 
 export default function HabitsContainerTop() {
     const { habitWindowObject, selectedCurrentDayObject, offsetDayObject } = useGlobalContextProvider();
@@ -56,13 +57,17 @@ export default function HabitsContainerTop() {
                 </div>
             </div>
 
-            <button
+            <PixelButtonIcon
+                icon={faPlus}
+                iconPosition="left"
                 onClick={handleOpenHabitWindow}
-                className="flex gap-2 items-center bg-primary p-2 sm:p-3 text-white rounded-md text-sm hover:bg-primary/90 transition-colors w-full sm:w-auto justify-center"
+                size="medium"
+                className="w-full sm:w-auto"
             >
-                <FontAwesomeIcon icon={faPlus} />
-                <span>New Adventure</span>
-            </button>
+                New Adventure
+            </PixelButtonIcon>
+
+
         </div>
     )
 }

@@ -1,0 +1,21 @@
+.pixel-frame {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    padding: 16px;
+    border-width: 16px;
+    border-style: solid;
+    border-image-source: url('../../images/frame2.png');
+    border-image-slice: 16 fill;
+    border-image-width: 16px;
+    border-image-repeat: stretch;
+
+    background-color: #fbe0b4;
+}
+
+.pixel-frame-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
