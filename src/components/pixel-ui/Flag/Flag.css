@@ -1,0 +1,41 @@
+.flag {
+    width: 500px;
+    height: 90px;
+    background-image: url('../../images/parchment-flag.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 70px;
+    position: relative;
+    z-index: 10;
+}
+
+@media (min-width: 480px) {
+    .flag {
+        width: 420px;
+        height: 100px;
+        padding: 22px 75px;
+    }
+}
+
+@media (min-width: 768px) {
+    .flag {
+        width: 460px;
+        height: 110px;
+        padding: 24px 80px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .flag {
+        width: 520px;
+        height: 120px;
+        padding: 26px 85px;
+    }
+}
