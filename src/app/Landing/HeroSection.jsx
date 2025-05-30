@@ -1,20 +1,78 @@
+"use client";
+import React from 'react';
+import { useAuth } from "@clerk/nextjs";
+import Link from "next/link";
+import WoodenBoardChain from '../../components/pixel-ui/WoodenBoardChain/WoodenBoardChain';
+import Flag from '../../components/pixel-ui/Flag/Flag';
+import LogoAndName from './LogoAndName';
+import { PixelButton } from '../../components/pixel-ui/PixelButton/PixelButton';
+
 export default function HeroSection() {
+    const { userId } = useAuth();
+
     return (
-        <div
-            className={'flex flex-col mx-4 sm:mx-8 md:mx-16 items-center mt-[60px] sm:mt-[80px] md:mt-[100px] gap-4 sm:gap-6 px-4'}>
-            <span className="font-bold text-2xl sm:text-3xl text-center">
-                Start your habit <span className="text-primary"> journey! </span>
-            </span>
-            <p className="text-center text-sm max-w-[320px] sm:max-w-[430px] w-full px-2">
-                Feeling overwhelmed? Our easy-to-use habit tracker helps you take
-                control of your day and achieve your goals.
-            </p>
+        <div className="min-h-screen relative overflow-hidden">
+            {/* background landscape */}
+            <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                    backgroundImage: `url('/landing-landscape.png')`,
+                    imageRendering: 'pixelated'
+                }}
+            />
 
-            <button className={`block text-sm font-light rounded-lg px-6 sm:px-9 py-3 text-primary border border-primary transition focus:outline-none hover:bg-primary hover:text-white`}
-                    type="button">
-                {`Let's get started!`}
-            </button>
+            {/* wooden background */}
+            <div className="absolute top-0 right-0 bottom-0 z-5
+                           w-[100vw]
+                           sm:w-[500px]
+                           md:w-[600px]
+                           lg:w-[580px]
+                           xl:w-[620px]"
+                 style={{
+                     backgroundImage: `url('/darkWoodBg.png')`,
+                     backgroundSize: 'cover',
+                     backgroundPosition: 'center right',
+                     backgroundRepeat: 'no-repeat',
+                     imageRendering: 'pixelated'
+                 }} />
 
+            {/* wooden board chain */}
+            <div className="absolute top-0 right-0 bottom-0 z-10
+                           w-[100vw]
+                           sm:w-[500px]
+                           md:w-[600px]
+                           lg:w-[580px]
+                           xl:w-[620px]
+                           flex items-center justify-center">
+                <WoodenBoardChain>
+                    <Flag>
+                        <LogoAndName />
+                    </Flag>
+
+                    <div className="flex flex-col gap-3 sm:gap-4 w-full mt-6 sm:mt-8">
+                        {userId ? (
+                            <Link href="/dashboard">
+                                <PixelButton variant="primary" size="medium" className="w-full">
+                                    Dashboard
+                                </PixelButton>
+                            </Link>
+                        ) : (
+                            <>
+                                <Link href="/sign-in">
+                                    <PixelButton variant="primary" size="medium" className="w-full">
+                                        Sign In
+                                    </PixelButton>
+                                </Link>
+                                <Link href="/sign-up">
+                                    <PixelButton variant="primary" size="medium" className="w-full">
+                                        Sign Up
+                                    </PixelButton>
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </WoodenBoardChain>
+            </div>
         </div>
-    )
+    );
 }

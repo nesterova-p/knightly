@@ -1,0 +1,65 @@
+.wooden-board {
+    position: relative;
+    width: 500px;
+    height: 650px;
+    padding: 75px 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    box-sizing: border-box;
+}
+
+.wooden-board::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../../images/woodenBoardChain.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    /* Pixel perfect rendering */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+
+    z-index: -1;
+}
+
+/* Ensure children are above the background */
+.wooden-board > * {
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 1024px) {
+    .wooden-board {
+        width: 460px;
+        height: 620px;
+        padding: 70px 80px;
+        gap: 26px;
+    }
+}
+
+@media (max-width: 768px) {
+    .wooden-board {
+        width: 420px;
+        height: 580px;
+        padding: 65px 75px;
+        gap: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .wooden-board {
+        width: 380px;
+        height: 530px;
+        padding: 55px 65px;
+        gap: 20px;
+    }
+}
