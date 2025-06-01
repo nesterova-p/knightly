@@ -1,0 +1,88 @@
+.wooden-banner {
+    position: relative;
+    width: 100%;
+    background: linear-gradient(145deg, #8B4513 0%, #A0522D  25%, #CD853F  50%, #A0522D 75%, #8B4513 100%);
+    border-radius: 25px;
+    padding: 4px;
+    box-shadow:
+            inset 0 2px 4px rgba(139, 69, 19, 0.3),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+            0 4px 8px rgba(0, 0, 0, 0.2);
+
+    /* Pixel perfect rendering */
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+
+    /* Wood texture effect */
+    background-image:
+            linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.1) 50%),
+            linear-gradient(0deg, transparent 50%, rgba(255,255,255,0.1) 50%);
+    background-size: 4px 4px, 2px 2px;
+}
+
+.wooden-banner::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background: linear-gradient(145deg, #D2B48C 0%, #DEB887 50%, #D2B48C 100%);
+    border-radius: 23px;
+    z-index: 0;
+
+    /* Inner shadow for depth */
+    box-shadow:
+            inset 0 2px 4px rgba(255, 255, 255, 0.3),
+            inset 0 -2px 4px rgba(139, 69, 19, 0.2);
+}
+
+.wooden-banner::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    background: linear-gradient(145deg, #F5DEB3 0%, #DEB887 50%, #D2B48C 100%);
+    border-radius: 19px;
+    z-index: 1;
+
+    /* Subtle inner glow */
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.wooden-banner-content {
+    position: relative;
+    z-index: 2;
+    padding: 16px 24px;
+    color: #4A2C17;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Hover effect */
+.wooden-banner:hover {
+    transform: translateY(-1px);
+    box-shadow:
+            inset 0 2px 4px rgba(139, 69, 19, 0.3),
+            inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+            0 6px 12px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+    .wooden-banner-content {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .wooden-banner-content {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}

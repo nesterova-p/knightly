@@ -98,3 +98,118 @@ img {
   .wooden-board { width: 260px; height: 350px; padding: 30px 40px; gap: 12px; }
   .flag { width: 200px; height: 60px; padding: 12px; }
 }
+
+/* Add this to your globals.css */
+
+.pixel-title-white-responsive {
+  font-family: var(--pixelify-font);
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 2px 2px 0px #000000,
+  -1px -1px 0px #000000,
+  1px -1px 0px #000000,
+  -1px 1px 0px #000000;
+
+  /* Pixel perfect rendering */
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+
+  /* Responsive sizing */
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+}
+
+@media (min-width: 640px) {
+  .pixel-title-white-responsive {
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .pixel-title-white-responsive {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pixel-title-white-responsive {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .pixel-title-white-responsive {
+    font-size: 2.75rem;
+  }
+}
+
+/* Alternative: Medieval-inspired variant */
+.pixel-title-medieval {
+  font-family: var(--pixelify-font);
+  font-weight: 700;
+  color: #200e00; /* Gold color */
+  text-shadow: 2px 2px 0px #fbf2d2
+  ;
+
+  /* Add a subtle glow effect */
+  filter: drop-shadow(0 0 8px rgba(147, 97, 53, 0.55));
+
+  font-size: 2.25rem;
+  line-height: 1.2;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pixel-title-white-responsive {
+  font-family: var(--pixelify-font);
+  font-weight: 700;
+  color: #FFFFFF;
+  text-shadow: 2px 2px 0px #000000;
+
+  /* PIXEL PERFECT RENDERING */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: 0.1em;
+}
+
+/* Fix dla wszystkich elementów pixel art */
+.pixel-element,
+[style*="pixelated"],
+.wooden-background {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+  image-rendering: -webkit-optimize-contrast !important;
+}
+
+/* Fix dla tła */
+.wooden-top-bar {
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+  background-size: 100% 100% !important;
+  background-repeat: no-repeat !important;
+}
+
+@media (min-width: 640px) {
+  .pixel-title-white-responsive {
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .pixel-title-white-responsive {
+    font-size: 2.25rem;
+  }
+}

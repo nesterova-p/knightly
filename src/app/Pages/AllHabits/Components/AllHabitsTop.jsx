@@ -34,12 +34,22 @@ export function AllHabitsTop() {
     }, [setOpenSideBar]);
 
     return (
-        <div className={"bg-white p-3 sm:p-5 rounded-md flex justify-between items-center flex-wrap gap-2"}>
+        <div
+            className={"p-3 sm:p-5 rounded-md flex justify-between items-center flex-wrap gap-2 wooden-top-bar pixel-element"}
+            style={{
+                backgroundImage: `url('/wooden-bar.png')`,
+                backgroundSize: '100% 100%',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                imageRendering: 'pixelated',
+                minHeight: '80px'
+            }}
+        >
             <div className={"flex items-center gap-1 flex-shrink-0"}>
                 <div className={"max-lg:flex hidden"}>
                     <UserButton appearance={userButtonAppearance}/>
                 </div>
-                <div className="hidden sm:block">
+                <div className="hidden sm:block ml-10">
                     <LogoAndName />
                 </div>
             </div>
@@ -51,7 +61,7 @@ export function AllHabitsTop() {
                 <FontAwesomeIcon
                     icon={faBars}
                     onClick={openSideBarFunction}
-                    className={"max-xl:flex hidden cursor-pointer text-lg"}
+                    className={"max-xl:flex hidden cursor-pointer text-lg text-white"}
                 />
             </div>
         </div>

@@ -8,7 +8,7 @@ export default function LogoAndName() {
             </div>*/}
             <span className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl
                            font-light leading-tight text-center">
-                <span className="pixel-title-white-responsive ">
+                <span className="pixel-title-medieval ">
                     Knightly
                 </span>
             </span>
