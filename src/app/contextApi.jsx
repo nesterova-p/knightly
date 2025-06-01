@@ -38,7 +38,8 @@ const defaultHabitState = {
     isTask: false,
     dueDate: new Date(),
     areas: [],
-    completedDays: []
+    completedDays: [],
+    difficulty: "Easy"
 };
 
 const GlobalContext = createContext({
@@ -163,13 +164,17 @@ export const GlobalContextProvider = ({ children }) => {
                 const data = await response.json();
 
                 const updatedHabits = data.habits.map((habit) => {
+                    let processedHabit = { ...habit };
+
                     if (typeof habit.icon === "string") {
-                        return {
-                            ...habit,
-                            icon: textToIcon(habit.icon),
-                        };
+                        processedHabit.icon = textToIcon(habit.icon);
                     }
-                    return habit;
+
+                    if (!habit.difficulty) {
+                        processedHabit.difficulty = "Easy";
+                    }
+
+                    return processedHabit;
                 });
 
                 const updatedHabitsWithAreas = updatedHabits.map((habit) => {
@@ -204,7 +209,6 @@ export const GlobalContextProvider = ({ children }) => {
 
                 console.log(updatedHabitsWithMappedFrequency);
                 setAllHabits(updatedHabitsWithMappedFrequency);
-
 
             } catch (error) {
                 console.error("Error fetching habits:", error);

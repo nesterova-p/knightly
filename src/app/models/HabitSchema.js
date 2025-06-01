@@ -34,7 +34,12 @@ const HabitSchema = new Schema({
     isTask: { type: Boolean, required: true },
     dueDate: { type: Date, required: true },
     areas: { type: [AreaSchema], required: true, default: [] },
-    completedDays: { type: [CompletedDaySchema], required: true, default: [] }
+    completedDays: { type: [CompletedDaySchema], required: true, default: [] },
+    difficulty: {
+        type: String,
+        enum: ['Trivial', 'Easy', 'Medium', 'Hard'],
+        default: 'Easy'
+    }
 }, { timestamps: true });
 
 const HabitsCollection = mongoose.models.HabitsCollection || mongoose.model("HabitsCollection", HabitSchema);

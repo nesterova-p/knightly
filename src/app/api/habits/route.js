@@ -14,8 +14,12 @@ export async function POST(req) {
             frequency,
             areas,
             completedDays,
-            clerkUserId
+            clerkUserId,
+            difficulty
         } = await req.json();
+
+        const validDifficulties = ['Trivial', 'Easy', 'Medium', 'Hard'];
+        const finalDifficulty = validDifficulties.includes(difficulty) ? difficulty : 'Easy';
 
         if (!name || !clerkUserId) {
             return NextResponse.json(
@@ -60,7 +64,8 @@ export async function POST(req) {
             }],
             areas: areas || [],
             completedDays: completedDays || [],
-            clerkUserId
+            clerkUserId,
+            difficulty: finalDifficulty
         });
 
         const savedHabit = await habit.save();
@@ -147,8 +152,12 @@ export async function PUT(request) {
             dueDate,
             hasReminder,
             reminderTime,
-            clerkUserId
+            clerkUserId,
+            difficulty
         } = await request.json();
+
+        const validDifficulties = ['Trivial', 'Easy', 'Medium', 'Hard'];
+        const finalDifficulty = validDifficulties.includes(difficulty) ? difficulty : 'Easy';
 
         if (!name) {
             return NextResponse.json(
@@ -186,7 +195,8 @@ export async function PUT(request) {
                     isTask: isTask || false,
                     dueDate: dueDate ? new Date(dueDate) : new Date(),
                     hasReminder: hasReminder || false,
-                    reminderTime: reminderTime || ""
+                    reminderTime: reminderTime || "",
+                    difficulty: finalDifficulty
                 }
             },
             { returnDocument: "after" }

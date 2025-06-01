@@ -13,6 +13,7 @@ import TimePicker from "./NewHabitWindow/TimePicker";
 import AreasNewHabit from "./NewHabitWindow/AreasNewHabit";
 import { v4 as uuidv4 } from 'uuid';
 import { useUser } from "@clerk/nextjs";
+import DifficultySelector from "../Components/DifficultySelector"
 
 const HeaderMemo = memo(Header);
 const InputNameAndIconButtonMemo = memo(InputNameAndIconButton);
@@ -99,6 +100,14 @@ export default function HabitWindow() {
         }));
     }, [setHabitItem]);
 
+    const updateDifficulty = useCallback((selectedDifficulty) => {
+        setHabitItem(prev => ({
+            ...prev,
+            difficulty: selectedDifficulty
+        }));
+    }, [setHabitItem]);
+
+
     useEffect(() => {
         if (openHabitWindow) {
             if (selectedItems) {
@@ -126,7 +135,8 @@ export default function HabitWindow() {
                     areas: selectedItems.areas || [],
                     completedDays: selectedItems.completedDays || [],
                     isTask: selectedItems.isTask || false,
-                    dueDate: selectedItems.dueDate || new Date()
+                    dueDate: selectedItems.dueDate || new Date(),
+                    difficulty: selectedItems.difficulty || "Easy"
                 };
                 setHabitItem(editHabit);
                 setIconSelected(editHabit.icon);
@@ -155,7 +165,8 @@ export default function HabitWindow() {
                     areas: [],
                     completedDays: [],
                     isTask: false,
-                    dueDate: new Date()
+                    dueDate: new Date(),
+                    difficulty: "Easy"
                 };
                 setHabitItem(newHabit);
                 setIconSelected(faIcons);
@@ -195,6 +206,11 @@ export default function HabitWindow() {
                         onFrequencyChange={updateWeeklyFrequency}
                         initialFrequency={habitItem?.frequency?.[0]?.number || 1}
                         onDateChange={updateDueDate}
+                    />
+
+                    <DifficultySelector
+                        onDifficultyChange={updateDifficulty}
+                        initialDifficulty={habitItem?.difficulty || "Easy"}
                     />
                     <Reminder />
                     <AreasNewHabit onChange={getSelectedAreaItems}/>
