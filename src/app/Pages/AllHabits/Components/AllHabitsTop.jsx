@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBars} from "@fortawesome/free-solid-svg-icons";
 import {UserButton} from "@clerk/nextjs";
 import {useGlobalContextProvider} from "../../../contextApi";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 export function AllHabitsTop() {
     const userButtonAppearance = {
@@ -13,6 +13,8 @@ export function AllHabitsTop() {
             userButtonPopover: 'text-primary',
         }
     }
+
+    const [windowWidth, setWindowWidth] = useState(0);
 
     const {openSideBarObject} = useGlobalContextProvider();
     const {openSideBar, setOpenSideBar} = openSideBarObject || {};
@@ -24,32 +26,66 @@ export function AllHabitsTop() {
     useEffect(() => {
         function handleSizeChange(){
             setOpenSideBar(false);
+            setWindowWidth(window.innerWidth);
         }
 
-        window.addEventListener("resize", handleSizeChange)
+        // Set initial width
+        setWindowWidth(window.innerWidth);
+
+        window.addEventListener("resize", handleSizeChange);
 
         return () => {
-            window.removeEventListener("resize", handleSizeChange)
+            window.removeEventListener("resize", handleSizeChange);
         }
     }, [setOpenSideBar]);
 
+    const getResponsiveStyles = () => {
+        if (windowWidth < 480) {
+
+            return {
+                backgroundSize: '450px 70px',
+                padding: '15px 25px',
+                minHeight: '70px'
+            };
+        } else if (windowWidth < 768) {
+            return {
+                backgroundSize: '800px 85px',
+                padding: '18px 50px 18px 50px',
+                minHeight: '85px'
+            };
+        } else if (windowWidth < 1024) {
+            return {
+                backgroundSize: '1000px 95px',
+                padding: '20px 80px 20px 80px',
+                minHeight: '95px'
+            };
+        } else {
+            return {
+                backgroundSize: '840px 100px',
+                padding: '20px 90px 20px 40px',
+                minHeight: '100px'
+            };
+        }
+    };
+
+    const responsiveStyles = getResponsiveStyles();
+
     return (
         <div
-            className={"p-3 sm:p-5 rounded-md flex justify-between items-center flex-wrap gap-2 wooden-top-bar pixel-element"}
+            className={"rounded-md flex justify-between items-center flex-wrap gap-2 wooden-top-bar pixel-element"}
             style={{
-                backgroundImage: `url('/wooden-bar.png')`,
-                backgroundSize: '100% 100%',
+                backgroundImage: `url('/wooden-bar2.png')`,
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
                 imageRendering: 'pixelated',
-                minHeight: '80px'
+                ...responsiveStyles
             }}
         >
             <div className={"flex items-center gap-1 flex-shrink-0"}>
                 <div className={"max-lg:flex hidden"}>
                     <UserButton appearance={userButtonAppearance}/>
                 </div>
-                <div className="hidden sm:block ml-10">
+                <div className="hidden sm:block ml-2 sm:ml-10">
                     <LogoAndName />
                 </div>
             </div>

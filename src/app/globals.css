@@ -198,7 +198,6 @@ img {
   image-rendering: pixelated !important;
   image-rendering: -moz-crisp-edges !important;
   image-rendering: crisp-edges !important;
-  background-size: 100% 100% !important;
   background-repeat: no-repeat !important;
 }
 
