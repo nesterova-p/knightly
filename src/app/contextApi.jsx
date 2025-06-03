@@ -121,6 +121,17 @@ const GlobalContext = createContext({
         searchQuery: "",
         setSearchQuery: () => {},
     },
+    userXPObject: {
+        userXP: 0,
+        setUserXP: () => {},
+        userLevel: 1,
+        setUserLevel: () => {},
+        isXPLoading: false,
+        setIsXPLoading: () => {},
+        xpError: null,
+        setXPError: () => {},
+        refreshUserXP: () => {},
+    }
 })
 
 export const GlobalContextProvider = ({ children }) => {
@@ -151,8 +162,54 @@ export const GlobalContextProvider = ({ children }) => {
     const [openConfirmationWindow, setOpenConfirmationWindow] = useState(false);
     const [selectedItems, setSelectedItems] = useState(null);
     const [openAreaWindow, setOpenAreaWindow] = useState(false);
-    const { isLoaded, isSignedIn, user } = useUser();
     const [searchQuery, setSearchQuery] = useState("");
+    const [userXP, setUserXP] = useState(0);
+    const [userLevel, setUserLevel] = useState(1);
+    const [isXPLoading, setIsXPLoading] = useState(false);
+    const [xpError, setXPError] = useState(null);
+
+    const { isLoaded, isSignedIn, user } = useUser();
+
+    const refreshUserXP = async () => {
+        if (!user?.id) return;
+
+        setIsXPLoading(true);
+        setXPError(null);
+
+        try {
+            const response = await fetch(`/api/user/xp?clerkUserId=${user.id}`);
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    console.log("User not found in XP system, initializing with defaults");
+                    setUserXP(0);
+                    setUserLevel(1);
+                    return;
+                }
+                throw new Error(`Failed to fetch user XP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setUserXP(data.user.totalXP || 0);
+            setUserLevel(data.user.level || 1);
+
+            console.log(`XP Data loaded: ${data.user.totalXP} XP, Level ${data.user.level}`);
+
+        } catch (error) {
+            console.error("Error fetching user XP:", error);
+            setXPError(error.message);
+            setUserXP(0);
+            setUserLevel(1);
+        } finally {
+            setIsXPLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isLoaded && isSignedIn && user?.id) {
+            refreshUserXP();
+        }
+    }, [isLoaded, isSignedIn, user?.id]);
 
     useEffect(() => {
         const fetchAllHabits = async () => {
@@ -256,6 +313,19 @@ export const GlobalContextProvider = ({ children }) => {
         }
     }, [isLoaded, isSignedIn, user]);
 
+    const userXPObject = {
+        userXP,
+        setUserXP,
+        userLevel,
+        setUserLevel,
+        isXPLoading,
+        setIsXPLoading,
+        xpError,
+        setXPError,
+        refreshUserXP,
+        clerkUserId: user?.id // just in case, and for convenience
+    };
+
     return (
         <GlobalContext.Provider value={{
             menuItemsObject: { menuItems, setMenuItems },
@@ -309,6 +379,7 @@ export const GlobalContextProvider = ({ children }) => {
                 searchQuery,
                 setSearchQuery,
             },
+            userXPObject
         }}>
             {children}
         </GlobalContext.Provider>

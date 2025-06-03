@@ -8,6 +8,7 @@ import { faCode } from "@fortawesome/free-solid-svg-icons";
 import { useGlobalContextProvider } from "../../../contextApi";
 import { toggleHabitCompletion } from "../../../utils/updateCompletedDays";
 import { v4 as uuidv4 } from 'uuid';
+import { DifficultyDiamonds, getXPForDifficulty, getDifficultyColor } from "../../../utils/xpLevelUtils";
 
 export function SingleHabitCard({ singleHabit }) {
     const {
@@ -16,7 +17,8 @@ export function SingleHabitCard({ singleHabit }) {
         openDropDownObject,
         dropDownPositionsObject,
         selectedItemsObject,
-        searchHabitsObject
+        searchHabitsObject,
+        userXPObject
     } = useGlobalContextProvider();
 
     const { allHabits, setAllHabits } = allHabitObject;
@@ -36,6 +38,10 @@ export function SingleHabitCard({ singleHabit }) {
         )
     );
 
+    const difficulty = singleHabit.difficulty || 'Easy';
+    const xpValue = getXPForDifficulty(difficulty);
+    const difficultyColor = getDifficultyColor(difficulty);
+
     async function handleCheckboxChange(event) {
         const checked = event.target.checked;
 
@@ -44,32 +50,13 @@ export function SingleHabitCard({ singleHabit }) {
             selectedCurrentDay,
             isChecked: checked,
             allHabits,
-            setAllHabits
+            setAllHabits,
+            userXPObject
         });
 
         if (!success) {
             event.target.checked = !checked;
         }
-    }
-
-    async function checkHabit() {
-        await toggleHabitCompletion({
-            habit: singleHabit,
-            selectedCurrentDay,
-            isChecked: true,
-            allHabits,
-            setAllHabits
-        });
-    }
-
-    async function uncheckHabit() {
-        await toggleHabitCompletion({
-            habit: singleHabit,
-            selectedCurrentDay,
-            isChecked: false,
-            allHabits,
-            setAllHabits
-        });
     }
 
     function handleClickThreeDots(event) {
@@ -133,9 +120,26 @@ export function SingleHabitCard({ singleHabit }) {
                                 width={16}
                                 icon={iconObject}
                             />
-                            <span className="text-sm sm:text-base truncate">
-                                {highlightSearchText(singleHabit.name, searchQuery)}
-                            </span>
+                            <div className="min-w-0 flex-1">
+                                <span className="text-sm sm:text-base truncate block">
+                                    {highlightSearchText(singleHabit.name, searchQuery)}
+                                </span>
+                                <div className="flex items-center gap-2 mt-1">
+                                    <DifficultyDiamonds difficulty={difficulty} size="sm" />
+                                    <span
+                                        className="text-xs font-medium px-1.5 py-0.5 rounded"
+                                        style={{
+                                            backgroundColor: `${difficultyColor}20`,
+                                            color: difficultyColor
+                                        }}
+                                    >
+                                        +{xpValue} XP
+                                    </span>
+                                    <span className="text-xs text-gray-500 font-medium">
+                                        {difficulty}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="flex gap-1 sm:gap-2 mt-2 sm:mt-3 flex-wrap">
