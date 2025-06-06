@@ -72,7 +72,7 @@ export function AllHabitsTop() {
 
     return (
         <div
-            className={"rounded-md flex justify-between items-center flex-wrap gap-2 wooden-top-bar pixel-element"}
+            className={" flex justify-between items-center flex-wrap gap-2 wooden-top-bar pixel-element"}
             style={{
                 backgroundImage: `url('/wooden-bar2.png')`,
                 backgroundPosition: 'center',

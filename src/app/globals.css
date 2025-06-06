@@ -212,3 +212,29 @@ img {
     font-size: 2.25rem;
   }
 }
+
+.wooden-bg-container {
+  position: relative;
+}
+
+.wooden-bg-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/darkWoodBg.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  border-radius: 0.5rem; /* rounded-lg */
+  z-index: 0;
+}
+
+.wooden-bg-container > * {
+  position: relative;
+  z-index: 1;
+}
+

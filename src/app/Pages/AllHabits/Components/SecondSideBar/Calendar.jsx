@@ -28,7 +28,12 @@ export default function Calendar() {
     }
 
     return (
-        <div className={`flex mx-2 sm:mx-4 w-full flex-col gap-6 justify-center items-center mt-5 mb-5 rounded-xl p-2 sm:p-3 pt-3 sm:pt-5 ${isDarkMode ? 'bg-gray-800' : 'bg-slate-50'} max-sm:mx-2`}>
+        <div className="flex w-full flex-col gap-2 justify-center items-center mt-5 mb-5 rounded-lg p-4" // Usunąłem mx-2 sm:mx-4, max-sm:mx-2, bg-slate-50
+             style={{
+                 backgroundColor: 'rgb(83,55,34,0.3)',
+                 backdropFilter: 'blur(2px)',
+             }}>
+
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DateCalendar
                     onChange={handleOnChangeDate}
@@ -46,48 +51,64 @@ export default function Calendar() {
                             paddingRight: { xs: '5px', sm: '10px' },
                         },
                         '& .MuiPickersCalendarHeader-label': {
-                            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' },
-                            color: isDarkMode ? '#FFFFFF' : '#1F2937'
+                            fontSize: { xs: '1rem', sm: '1.1rem', md: '1.2rem' }, // Zwiększono rozmiar
+                            color: '#FFE4B5', // Jasny kremowy kolor
+                            fontWeight: 'bold',
+                            textShadow: '1px 1px 0px #000000', // Pixelowy text-shadow
+                            fontFamily: 'var(--pixelify-font)' // Pixelowy font
                         },
                         "& .MuiPickersDay-root": {
-                            fontWeight: '400',
-                            borderRadius: '50%',
-                            fontSize: { xs: '0.7rem', sm: '0.8rem', md: '0.875rem' },
-                            padding: { xs: '0.4rem', sm: '0.5rem', md: '0.75rem' },
+                            fontWeight: '600', // Zwiększono font-weight
+                            borderRadius: '0px', // Kwadratowe zamiast okrągłe (pixelowy styl)
+                            fontSize: { xs: '0.8rem', sm: '0.9rem', md: '1rem' }, // Zwiększono rozmiar
+                            padding: { xs: '0.5rem', sm: '0.6rem', md: '0.8rem' },
                             margin: { xs: '1px', sm: '2px' },
-                            color: isDarkMode ? '#FFFFFF' : '#1F2937',
+                            color: '#FFE4B5', // Jasny kremowy kolor
+                            textShadow: '1px 1px 0px #000000', // Pixelowy text-shadow
+                            fontFamily: 'var(--pixelify-font)', // Pixelowy font
                             "&.Mui-selected": {
-                                border: "none",
+                                border: "2px solid #FFFFFF",
                                 backgroundColor: "#9EC77D",
                                 color: "white",
+                                textShadow: '1px 1px 0px #000000',
                                 "&:focus, &:hover": {
                                     backgroundColor: "#9EC77D",
                                 }
                             },
                             "&:hover": {
-                                backgroundColor: "rgba(0, 0, 0, 0.04)",
+                                backgroundColor: "rgba(255, 228, 181, 0.2)", // Hover z kremowym kolorem
                             },
                         },
                         "& .MuiPickersDay-today": {
-                            border: "none",
-                            backgroundColor: "#4B5563",
-                            color: "white",
+                            border: "2px solid #FF6B6B", // Czerwona ramka dla dzisiaj
+                            backgroundColor: "rgba(255, 107, 107, 0.3)",
+                            color: "#FFE4B5",
+                            textShadow: '1px 1px 0px #000000',
                             "&.Mui-selected": {
                                 backgroundColor: "#9EC77D",
+                                border: "2px solid #FFFFFF",
                             }
                         },
                         "& .MuiPickersYear-yearButton": {
-                            color: isDarkMode ? '#FFFFFF' : '#1F2937',
+                            color: '#FFE4B5',
+                            fontFamily: 'var(--pixelify-font)',
+                            textShadow: '1px 1px 0px #000000',
                             "&.Mui-selected": {
                                 backgroundColor: "#9EC77D",
                                 color: "white"
                             }
                         },
                         "& .MuiPickersCalendarHeader-switchViewButton": {
-                            color: isDarkMode ? '#FFFFFF' : '#1F2937',
+                            color: '#FFE4B5',
                         },
                         "& .MuiPickersArrowSwitcher-button": {
-                            color: isDarkMode ? '#FFFFFF' : '#1F2937',
+                            color: '#FFE4B5',
+                        },
+                        "& .MuiDayCalendar-weekDayLabel": {
+                            color: '#D3D3D3', // Jasny szary dla dni tygodnia
+                            fontWeight: 'bold',
+                            textShadow: '1px 1px 0px #000000',
+                            fontFamily: 'var(--pixelify-font)'
                         }
                     }}
                 />

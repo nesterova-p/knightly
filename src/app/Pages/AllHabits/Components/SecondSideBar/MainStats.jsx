@@ -102,8 +102,18 @@ export default function MainStats() {
     ];
 
     return (
-        <div className="flex mx-2 sm:mx-4 max-sm:mx-2 w-full flex-col gap-4 justify-center items-center mt-5 rounded-xl p-3 sm:p-4 pt-5 bg-slate-50">
-            <span className="font-bold text-lg sm:text-xl cursor-pointer hover:text-primary transition-colors">
+        <div className="flex w-full flex-col gap-4 justify-center items-center p-6 rounded-lg mt-24"
+             style={{
+                 backgroundColor: 'rgb(83,55,34,0.3)',
+                 backdropFilter: 'blur(2px)',
+             }}>
+
+            <span className="font-bold text-2xl sm:text-3xl cursor-pointer transition-colors pixelify-bold" // Zwiększono z text-xl na text-2xl sm:text-3xl
+                  style={{
+                      color: '#FFE4B5',
+                      textShadow: '2px 2px 0px #000000, -1px -1px 0px #000000, 1px -1px 0px #000000, -1px 1px 0px #000000',
+                      imageRendering: 'pixelated'
+                  }}>
                 Statistics
             </span>
 
@@ -112,24 +122,45 @@ export default function MainStats() {
                     <CircularProgressBar progress={todayProgress} />
                 </div>
                 <div className="flex flex-col justify-center items-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <span className="font-bold text-lg sm:text-xl text-primary mt-2">
+                    <span className="font-bold text-xl sm:text-2xl text-primary mt-2 pixelify-bold" // Zwiększono z text-lg sm:text-xl na text-xl sm:text-2xl
+                          style={{
+                              color: '#9EC77D',
+                              textShadow: '1px 1px 0px #000000, -1px -1px 0px #000000, 1px -1px 0px #000000, -1px 1px 0px #000000'
+                          }}>
                         {todayProgress}%
                     </span>
-                    <span className="text-[10px] sm:text-[11px] text-slate-400 text-center mt-1">
+                    <span className="text-[13px] sm:text-[15px] text-center mt-1 pixelify-regular" // Zwiększono z text-[11px] sm:text-[12px]
+                          style={{
+                              color: '#E6E6FA',
+                              textShadow: '1px 1px 0px #000000'
+                          }}>
                         Today's Progress
                     </span>
                 </div>
             </div>
 
-            <div className="my-2 flex justify-center gap-3 sm:gap-6 flex-wrap items-center w-full max-sm:gap-4">
+            <div className="my-2 flex justify-center gap-4 sm:gap-6 flex-wrap items-center w-full max-sm:gap-4 ">
                 {statisticsInfo.map((singleItem, singleItemIndex) => (
                     <div className="flex items-center gap-2 sm:gap-3" key={singleItemIndex}>
-                        <div className="w-2 h-2 bg-customRed rounded-full"></div>
-                        <div className="text-[11px] sm:text-[12px]">
-                            <span className="flex flex-col font-bold">
+                        <div className="w-4 h-4" // Zwiększono z w-3 h-3 i usunąłem rounded-full (teraz kwadracik)
+                             style={{
+                                 backgroundColor: '#FF6B6B',
+                                 boxShadow: '0 0 4px rgba(255, 107, 107, 0.6)',
+                                 imageRendering: 'pixelated' // Dodano dla pixelowego stylu
+                             }}></div>
+                        <div className="text-[14px] sm:text-[16px]"> {/* Zwiększono z text-[12px] sm:text-[13px] */}
+                            <span className="flex flex-col font-bold pixelify-bold text-lg sm:text-xl" // Dodano text-lg sm:text-xl
+                                  style={{
+                                      color: '#FFE4B5',
+                                      textShadow: '1px 1px 0px #000000'
+                                  }}>
                                 {singleItem.num}
                             </span>
-                            <span className="text-gray-500">
+                            <span className="pixelify-regular text-sm sm:text-base" // Dodano text-sm sm:text-base
+                                  style={{
+                                      color: '#D3D3D3',
+                                      textShadow: '1px 1px 0px #000000'
+                                  }}>
                                 {singleItem.subTitle}
                             </span>
                         </div>

@@ -12,13 +12,13 @@ import ConfirmationComponent from "../app/utils/ConfirmationComponent";
 
 export default function AllHabits() {
     return (
-        <div className = 'max-lg:flex-col w-full flex flex-row gap-0'>
+        <div className='max-lg:flex-col w-full flex flex-row items-start'>
             <Toaster/>
             <HabitWindow/>
             <AreaWindow/>
             <DropDown/>
             <ConfirmationComponent/>
-            <div className={"flex-col flex-grow m-2 sm:m-4"}>
+            <div className={"flex-col flex-grow m-2 sm:m-4 mr-0 sm:mr-1"}>
                 <AllHabitsTop/>
                 <AreasContainer/>
                 <HabitsContainer/>
